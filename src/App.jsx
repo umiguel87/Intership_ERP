@@ -392,6 +392,10 @@ function App() {
               onEditarFatura={editarFatura}
               onNotificar={notificar}
               permissoes={permissoes}
+              onAbrirFatura={(fatura) => {
+                setSecaoAtiva('faturas')
+                setFaturaDetalheFromSearch(fatura)
+              }}
             />
           )}
 

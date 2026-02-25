@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import ConfirmModal from '../ui/ConfirmModal'
 import ModalEditarFatura from './ModalEditarFatura'
 import ModalAlterarEstadoFatura from './ModalAlterarEstadoFatura'
@@ -46,6 +46,18 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
   const [faturaAImprimir, setFaturaAImprimir] = useState(null)
   const [faturaAAlterarEstado, setFaturaAAlterarEstado] = useState(null)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const [mostrarFiltros, setMostrarFiltros] = useState(false)
+  const [menuAbertoId, setMenuAbertoId] = useState(null)
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    if (!menuAbertoId) return
+    const handleClickFora = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuAbertoId(null)
+    }
+    document.addEventListener('mousedown', handleClickFora)
+    return () => document.removeEventListener('mousedown', handleClickFora)
+  }, [menuAbertoId])
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE)
@@ -162,87 +174,16 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
             aria-label="Pesquisar por número ou nome do cliente"
           />
         </div>
-        <div className="lista-faturas__campo-filtro">
-          <label htmlFor="filtro-cliente-faturas" className="lista-faturas__label-pesquisa">
-            Cliente
-          </label>
-          <select
-            id="filtro-cliente-faturas"
-            className="lista-faturas__select"
-            value={filtroCliente}
-            onChange={(e) => setFiltroCliente(e.target.value)}
-            aria-label="Filtrar por cliente"
+        <div className="lista-faturas__toolbar-direita">
+          <button
+            type="button"
+            className={`lista-faturas__btn lista-faturas__btn--filtros ${mostrarFiltros ? 'lista-faturas__btn--filtros-ativo' : ''}`}
+            onClick={() => setMostrarFiltros((v) => !v)}
+            aria-expanded={mostrarFiltros}
+            aria-label={mostrarFiltros ? 'Ocultar filtros' : 'Mostrar filtros'}
           >
-            <option value="">Todos</option>
-            {[...clientes]
-              .map((c) => c.nome)
-              .filter(Boolean)
-              .sort((a, b) => a.localeCompare(b))
-              .map((nome) => (
-                <option key={nome} value={nome}>{nome}</option>
-              ))}
-          </select>
-        </div>
-        <div className="lista-faturas__campo-filtro">
-          <label htmlFor="filtro-estado-faturas" className="lista-faturas__label-pesquisa">
-            Estado
-          </label>
-          <select
-            id="filtro-estado-faturas"
-            className="lista-faturas__select"
-            value={filtroEstado}
-            onChange={(e) => setFiltroEstado(e.target.value)}
-            aria-label="Filtrar por estado"
-          >
-            <option value="">Todos</option>
-            {OPCOES_ESTADO.filter(Boolean).map((op) => (
-              <option key={op} value={op}>{op}</option>
-            ))}
-          </select>
-        </div>
-        <div className="lista-faturas__campo-data">
-          <label htmlFor="filtro-data-de" className="lista-faturas__label-pesquisa">
-            Data de
-          </label>
-          <input
-            id="filtro-data-de"
-            type="date"
-            className="lista-faturas__input-data"
-            value={dataDe}
-            onChange={(e) => setDataDe(e.target.value)}
-            aria-label="Filtrar a partir da data"
-          />
-        </div>
-        <div className="lista-faturas__campo-data">
-          <label htmlFor="filtro-data-ate" className="lista-faturas__label-pesquisa">
-            Data até
-          </label>
-          <input
-            id="filtro-data-ate"
-            type="date"
-            className="lista-faturas__input-data"
-            value={dataAte}
-            onChange={(e) => setDataAte(e.target.value)}
-            aria-label="Filtrar até à data"
-          />
-        </div>
-        <div className="lista-faturas__campo-ordem">
-          <label htmlFor="ordenar-faturas" className="lista-faturas__label-pesquisa">
-            Ordenar
-          </label>
-          <select
-            id="ordenar-faturas"
-            className="lista-faturas__select"
-            value={ordenar}
-            onChange={(e) => setOrdenar(e.target.value)}
-            aria-label="Ordenar tabela"
-          >
-            {OPCOES_ORDENAR.map((op) => (
-              <option key={op.value} value={op.value}>{op.label}</option>
-            ))}
-          </select>
-        </div>
-        <div className="lista-faturas__campo-export">
+            Filtros {mostrarFiltros ? '▲' : '▼'}
+          </button>
           <button
             type="button"
             className="lista-faturas__btn lista-faturas__btn--export"
@@ -253,6 +194,57 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
           </button>
         </div>
       </div>
+
+      {mostrarFiltros && (
+        <div className="lista-faturas__filtros-extra">
+          <div className="lista-faturas__campo-filtro">
+            <label htmlFor="filtro-cliente-faturas" className="lista-faturas__label-pesquisa">Cliente</label>
+            <select
+              id="filtro-cliente-faturas"
+              className="lista-faturas__select"
+              value={filtroCliente}
+              onChange={(e) => setFiltroCliente(e.target.value)}
+              aria-label="Filtrar por cliente"
+            >
+              <option value="">Todos</option>
+              {[...clientes].map((c) => c.nome).filter(Boolean).sort((a, b) => a.localeCompare(b)).map((nome) => (
+                <option key={nome} value={nome}>{nome}</option>
+              ))}
+            </select>
+          </div>
+          <div className="lista-faturas__campo-filtro">
+            <label htmlFor="filtro-estado-faturas" className="lista-faturas__label-pesquisa">Estado</label>
+            <select
+              id="filtro-estado-faturas"
+              className="lista-faturas__select"
+              value={filtroEstado}
+              onChange={(e) => setFiltroEstado(e.target.value)}
+              aria-label="Filtrar por estado"
+            >
+              <option value="">Todos</option>
+              {OPCOES_ESTADO.filter(Boolean).map((op) => (
+                <option key={op} value={op}>{op}</option>
+              ))}
+            </select>
+          </div>
+          <div className="lista-faturas__campo-data">
+            <label htmlFor="filtro-data-de" className="lista-faturas__label-pesquisa">Data de</label>
+            <input id="filtro-data-de" type="date" className="lista-faturas__input-data" value={dataDe} onChange={(e) => setDataDe(e.target.value)} aria-label="Filtrar a partir da data" />
+          </div>
+          <div className="lista-faturas__campo-data">
+            <label htmlFor="filtro-data-ate" className="lista-faturas__label-pesquisa">Data até</label>
+            <input id="filtro-data-ate" type="date" className="lista-faturas__input-data" value={dataAte} onChange={(e) => setDataAte(e.target.value)} aria-label="Filtrar até à data" />
+          </div>
+          <div className="lista-faturas__campo-ordem">
+            <label htmlFor="ordenar-faturas" className="lista-faturas__label-pesquisa">Ordenar</label>
+            <select id="ordenar-faturas" className="lista-faturas__select" value={ordenar} onChange={(e) => setOrdenar(e.target.value)} aria-label="Ordenar tabela">
+              {OPCOES_ORDENAR.map((op) => (
+                <option key={op.value} value={op.value}>{op.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
 
       {semDados && (
         <p className="lista-faturas__vazia lista-faturas__vazia--destaque">Ainda não há faturas.</p>
@@ -267,12 +259,12 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
           <table className="lista-faturas__tabela">
             <thead>
               <tr>
-                <th>Nº</th>
-                <th>Data</th>
-                <th>Cliente</th>
+                <th className="lista-faturas__th-num">Nº</th>
+                <th className="lista-faturas__th-data">Data</th>
+                <th className="lista-faturas__th-cliente">Cliente</th>
                 <th className="lista-faturas__valor">Valor</th>
-                <th>Estado</th>
-                <th>Ações</th>
+                <th className="lista-faturas__th-estado">Estado</th>
+                <th className="lista-faturas__th-acoes">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -291,122 +283,57 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
                 ].filter(Boolean).join(' ')
                 return (
                   <tr key={f.id} className={rowClass || undefined}>
-                    <td>{f.numero}</td>
-                    <td>{formatarData(f.data)}</td>
-                    <td>{f.cliente}</td>
+                    <td className="lista-faturas__td-num">{f.numero}</td>
+                    <td className="lista-faturas__td-data">{formatarData(f.data)}</td>
+                    <td className="lista-faturas__td-cliente">{f.cliente}</td>
                     <td className="lista-faturas__valor">{formatarMoeda(f.valor)}</td>
-                    <td>
+                    <td className="lista-faturas__td-estado">
                       {f.estado || '—'}
                       {emAtraso && <span className="lista-faturas__badge lista-faturas__badge--atraso" title="Data de vencimento ultrapassada">Em atraso</span>}
                     </td>
-                    <td>
-                      <div className="lista-faturas__acoes-celula">
-                        {isAnulada ? (
-                          <>
-                            <button
-                              type="button"
-                              className="lista-faturas__btn lista-faturas__btn--imprimir"
-                              onClick={() => setFaturaAImprimir(f)}
-                              aria-label={`Descarregar PDF da fatura ${f.numero}`}
-                            >
-                              Descarregar PDF
+                    <td className="lista-faturas__td-acoes">
+                      <div className="lista-faturas__acoes-celula" ref={menuAbertoId === f.id ? menuRef : null}>
+                        <button
+                          type="button"
+                          className="lista-faturas__btn lista-faturas__btn--menu"
+                          onClick={() => setMenuAbertoId(menuAbertoId === f.id ? null : f.id)}
+                          aria-expanded={menuAbertoId === f.id}
+                          aria-haspopup="true"
+                          aria-label={`Ações da fatura ${f.numero}`}
+                        >
+                          ⋮
+                        </button>
+                        {menuAbertoId === f.id && (
+                          <div className="lista-faturas__dropdown" role="menu">
+                            <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { setFaturaAImprimir(f); setMenuAbertoId(null) }}>
+                              Ver / Descarregar PDF
                             </button>
-                            {canCriarFatura && (
-                              <button
-                                type="button"
-                                className="lista-faturas__btn lista-faturas__btn--duplicar"
-                                onClick={() => handleDuplicar(f)}
-                                aria-label={`Duplicar fatura ${f.numero}`}
-                              >
-                                Duplicar
-                              </button>
-                            )}
-                          </>
-                        ) : isPaga ? (
-                          <>
-                            {canAlterarEstado && (
-                              <button
-                                type="button"
-                                className="lista-faturas__btn lista-faturas__btn--reativar"
-                                onClick={() => {
-                                  onEditarFatura?.(f.id, { estado: 'Por pagar', justificacao: '' })
-                                  onNotificar?.('Fatura reativada.')
-                                }}
-                                aria-label={`Reativar fatura ${f.numero}`}
-                              >
-                                Reativar
-                              </button>
-                            )}
-                            <button
-                              type="button"
-                              className="lista-faturas__btn lista-faturas__btn--imprimir"
-                              onClick={() => setFaturaAImprimir(f)}
-                              aria-label={`Descarregar PDF da fatura ${f.numero}`}
-                            >
-                              Descarregar PDF
-                            </button>
-                            {canCriarFatura && (
-                              <button
-                                type="button"
-                                className="lista-faturas__btn lista-faturas__btn--duplicar"
-                                onClick={() => handleDuplicar(f)}
-                                aria-label={`Duplicar fatura ${f.numero}`}
-                              >
-                                Duplicar
-                              </button>
-                            )}
-                          </>
-                        ) : (
-                          <>
-                            {canEditar && (
-                              <button
-                                type="button"
-                                className="lista-faturas__btn lista-faturas__btn--editar"
-                                onClick={() => setFaturaAEditar(f)}
-                                aria-label={`Editar fatura ${f.numero}`}
-                              >
+                            {!isAnulada && canEditar && (
+                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { setFaturaAEditar(f); setMenuAbertoId(null) }}>
                                 Editar
                               </button>
                             )}
-                            <button
-                              type="button"
-                              className="lista-faturas__btn lista-faturas__btn--imprimir"
-                              onClick={() => setFaturaAImprimir(f)}
-                              aria-label={`Descarregar PDF da fatura ${f.numero}`}
-                            >
-                              Descarregar PDF
-                            </button>
-                            {canCriarFatura && (
-                              <button
-                                type="button"
-                                className="lista-faturas__btn lista-faturas__btn--duplicar"
-                                onClick={() => handleDuplicar(f)}
-                                aria-label={`Duplicar fatura ${f.numero}`}
-                              >
-                                Duplicar
-                              </button>
-                            )}
-                            {canAlterarEstado && (
-                              <button
-                                type="button"
-                                className="lista-faturas__btn lista-faturas__btn--estado"
-                                onClick={() => setFaturaAAlterarEstado(f)}
-                                aria-label={`Alterar estado da fatura ${f.numero}`}
-                              >
+                            {!isAnulada && canAlterarEstado && (
+                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { setFaturaAAlterarEstado(f); setMenuAbertoId(null) }}>
                                 Alterar estado
                               </button>
                             )}
-                          </>
-                        )}
-                        {!isAnulada && canRemover && (
-                          <button
-                            type="button"
-                            className="lista-faturas__remover"
-                            onClick={() => setConfirmRemoverId(f.id)}
-                            aria-label={`Remover fatura ${f.numero}`}
-                          >
-                            Remover
-                          </button>
+                            {isPaga && canAlterarEstado && (
+                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { onEditarFatura?.(f.id, { estado: 'Por pagar', justificacao: '' }); onNotificar?.('Fatura reativada.'); setMenuAbertoId(null) }}>
+                                Reativar
+                              </button>
+                            )}
+                            {canCriarFatura && (
+                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { handleDuplicar(f); setMenuAbertoId(null) }}>
+                                Duplicar
+                              </button>
+                            )}
+                            {!isAnulada && canRemover && (
+                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item lista-faturas__dropdown-item--remover" onClick={() => { setConfirmRemoverId(f.id); setMenuAbertoId(null) }}>
+                                Remover
+                              </button>
+                            )}
+                          </div>
                         )}
                       </div>
                     </td>

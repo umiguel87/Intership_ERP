@@ -159,7 +159,6 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
             type="button"
             className="lista-faturas__btn lista-faturas__btn--export"
             onClick={() => { setMostrarCriar(true); setFormCriar({ nome: '', email: '', role: 'comercial', password: '', confirmPassword: '' }); setErrosCriar({}) }}
-            style={{ marginTop: '0.5rem' }}
           >
             Criar utilizador
           </button>
@@ -188,37 +187,39 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
                     <td>{u.ativo === false ? 'Inativo' : 'Ativo'}</td>
                   )}
                   <td>
-                    <button
-                      type="button"
-                      className="lista-faturas__btn lista-faturas__btn--editar"
-                      onClick={() => handleAbrirEditar(u)}
-                      aria-label={`Editar ${u.nome}`}
-                    >
-                      Editar
-                    </button>
-                    {canAtivarDesativar && (
-                      u.ativo !== false ? (
-                        currentUser?.id !== u.id && (
+                    <div className="lista-faturas__acoes-celula">
+                      <button
+                        type="button"
+                        className="lista-faturas__btn lista-faturas__btn--editar"
+                        onClick={() => handleAbrirEditar(u)}
+                        aria-label={`Editar ${u.nome}`}
+                      >
+                        Editar
+                      </button>
+                      {canAtivarDesativar && (
+                        u.ativo !== false ? (
+                          currentUser?.id !== u.id && (
+                            <button
+                              type="button"
+                              className="lista-faturas__btn lista-faturas__btn--estado"
+                              onClick={() => setConfirmDesativar(u)}
+                              aria-label={`Desativar ${u.nome}`}
+                            >
+                              Desativar
+                            </button>
+                          )
+                        ) : (
                           <button
                             type="button"
-                            className="lista-faturas__btn lista-faturas__btn--estado"
-                            onClick={() => setConfirmDesativar(u)}
-                            aria-label={`Desativar ${u.nome}`}
+                            className="lista-faturas__btn lista-faturas__btn--reativar"
+                            onClick={() => handleAtivarDesativar(u)}
+                            aria-label={`Ativar ${u.nome}`}
                           >
-                            Desativar
+                            Ativar
                           </button>
                         )
-                      ) : (
-                        <button
-                          type="button"
-                          className="lista-faturas__btn lista-faturas__btn--reativar"
-                          onClick={() => handleAtivarDesativar(u)}
-                          aria-label={`Ativar ${u.nome}`}
-                        >
-                          Ativar
-                        </button>
-                      )
-                    )}
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
