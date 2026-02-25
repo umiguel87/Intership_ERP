@@ -1,19 +1,26 @@
 import { useMemo, useState } from 'react'
 import ModalAlterarEstadoFatura from '../components/faturas/ModalAlterarEstadoFatura'
-import { formatarData, formatarMoeda } from '../utils/formatadores'
+import { formatarData, formatarMoeda, isFaturaEmAtraso } from '../utils/formatadores'
+
+const PAGE_SIZE = 20
 
 function ContasAReceberPage({ faturas = [], onEditarFatura, onNotificar, permissoes = {} }) {
   const [faturaAAlterarEstado, setFaturaAAlterarEstado] = useState(null)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
   const porPagar = useMemo(
     () =>
       faturas
         .filter((f) => (f.estado || '').trim() === 'Por pagar')
-        .sort((a, b) => new Date(b.data || 0).getTime() - new Date(a.data || 0).getTime()),
+        .sort((a, b) => new Date(a.data || 0).getTime() - new Date(b.data || 0).getTime()),
     [faturas]
   )
 
+  const emAtraso = useMemo(() => porPagar.filter(isFaturaEmAtraso), [porPagar])
   const total = useMemo(() => porPagar.reduce((sum, f) => sum + (f.valor ?? 0), 0), [porPagar])
+  const totalEmAtraso = useMemo(() => emAtraso.reduce((sum, f) => sum + (f.valor ?? 0), 0), [emAtraso])
+  const porPagarVisiveis = useMemo(() => porPagar.slice(0, visibleCount), [porPagar, visibleCount])
+  const temMais = visibleCount < porPagar.length
   const canAlterarEstado = permissoes.canMarcarFaturaPaga || permissoes.canMarcarFaturaAnulada
 
   return (
@@ -23,6 +30,11 @@ function ContasAReceberPage({ faturas = [], onEditarFatura, onNotificar, permiss
         <p className="contas-a-receber__total">
           Total por cobrar: <strong>{formatarMoeda(total)}</strong> ({porPagar.length} fatura{porPagar.length !== 1 ? 's' : ''})
         </p>
+        {emAtraso.length > 0 && (
+          <p className="contas-a-receber__atraso">
+            <strong>{emAtraso.length}</strong> fatura{emAtraso.length !== 1 ? 's' : ''} em atraso · Total: <strong>{formatarMoeda(totalEmAtraso)}</strong>
+          </p>
+        )}
       </section>
 
       {porPagar.length === 0 ? (
@@ -40,10 +52,12 @@ function ContasAReceberPage({ faturas = [], onEditarFatura, onNotificar, permiss
               </tr>
             </thead>
             <tbody>
-              {porPagar.map((f) => (
-                <tr key={f.id}>
+              {porPagarVisiveis.map((f) => {
+                const atraso = isFaturaEmAtraso(f)
+                return (
+                <tr key={f.id} className={atraso ? 'lista-faturas__linha--atraso' : undefined}>
                   <td>{f.numero}</td>
-                  <td>{formatarData(f.data)}</td>
+                  <td>{formatarData(f.data)}{atraso && <span className="lista-faturas__badge lista-faturas__badge--atraso">Em atraso</span>}</td>
                   <td>{f.cliente}</td>
                   <td className="lista-faturas__valor">{formatarMoeda(f.valor)}</td>
                   {canAlterarEstado && (
@@ -59,9 +73,22 @@ function ContasAReceberPage({ faturas = [], onEditarFatura, onNotificar, permiss
                     </td>
                   )}
                 </tr>
-              ))}
+                )
+              })}
             </tbody>
           </table>
+          {temMais && (
+            <div className="lista-faturas__carregar-mais">
+              <button
+                type="button"
+                className="lista-faturas__btn lista-faturas__btn--carregar"
+                onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
+                aria-label="Carregar mais faturas"
+              >
+                Carregar mais ({porPagar.length - visibleCount} restantes)
+              </button>
+            </div>
+          )}
         </div>
       )}
 

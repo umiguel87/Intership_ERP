@@ -5,6 +5,7 @@ import { labelRole } from '../constants/roles'
 import { formatarDataHora } from '../utils/formatadores'
 
 const ACOES_LOG = ['', 'criar', 'editar', 'remover']
+const PAGE_SIZE = 20
 
 function LogsPage() {
   const [logs, setLogs] = useState([])
@@ -13,6 +14,7 @@ function LogsPage() {
   const [filtroDataDe, setFiltroDataDe] = useState('')
   const [filtroDataAte, setFiltroDataAte] = useState('')
   const [filtroAction, setFiltroAction] = useState('')
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
   const recarregar = () => setLogs(getLogs())
 
@@ -37,6 +39,16 @@ function LogsPage() {
     }
     return list
   }, [logs, filtroUser, filtroDataDe, filtroDataAte, filtroAction])
+
+  const logsVisiveis = useMemo(
+    () => logsFiltrados.slice(0, visibleCount),
+    [logsFiltrados, visibleCount]
+  )
+  const temMais = visibleCount < logsFiltrados.length
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE)
+  }, [filtroUser, filtroDataDe, filtroDataAte, filtroAction])
 
   const utilizadoresUnicos = useMemo(() => {
     const set = new Set(logs.map((l) => l.userEmail).filter(Boolean))
@@ -132,7 +144,7 @@ function LogsPage() {
               </tr>
             </thead>
             <tbody>
-              {logsFiltrados.map((l) => (
+              {logsVisiveis.map((l) => (
                 <tr key={l.id}>
                   <td>{formatarDataHora(l.timestamp)}</td>
                   <td>{l.userEmail ?? '—'}</td>
@@ -144,6 +156,18 @@ function LogsPage() {
               ))}
             </tbody>
           </table>
+          {temMais && (
+            <div className="lista-faturas__carregar-mais">
+              <button
+                type="button"
+                className="lista-faturas__btn lista-faturas__btn--carregar"
+                onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
+                aria-label="Carregar mais registos"
+              >
+                Carregar mais ({logsFiltrados.length - visibleCount} restantes)
+              </button>
+            </div>
+          )}
         </div>
       )}
 

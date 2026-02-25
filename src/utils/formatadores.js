@@ -21,3 +21,12 @@ export function formatarDataHora(iso) {
 export function formatarMoeda(valor) {
   return Number(valor).toLocaleString('pt-PT', OPCOES_MOEDA)
 }
+
+/** Fatura "Por pagar" com data de vencimento anterior a hoje. */
+export function isFaturaEmAtraso(fatura) {
+  if (!fatura || (fatura.estado || '').trim() !== 'Por pagar') return false
+  const data = (fatura.data || '').slice(0, 10)
+  if (!data) return false
+  const hoje = new Date().toISOString().slice(0, 10)
+  return data < hoje
+}

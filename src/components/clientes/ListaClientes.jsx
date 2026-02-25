@@ -4,6 +4,8 @@ import ModalEditarCliente from './ModalEditarCliente'
 import DetalheCliente from './DetalheCliente'
 import { toCsv, downloadCsv } from '../../utils/csvExport'
 
+const PAGE_SIZE = 20
+
 const OPCOES_ORDENAR = [
   { value: 'nome-asc', label: 'Nome (A–Z)' },
   { value: 'nome-desc', label: 'Nome (Z–A)' },
@@ -21,6 +23,11 @@ function ListaClientes({ clientes = [], faturas = [], initialPesquisa, onInitial
   const [confirmRemoverId, setConfirmRemoverId] = useState(null)
   const [clienteAEditar, setClienteAEditar] = useState(null)
   const [clienteADetalhe, setClienteADetalhe] = useState(null)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE)
+  }, [pesquisa, ordenar])
 
   useEffect(() => {
     if (initialPesquisa != null && initialPesquisa !== '') {
@@ -56,6 +63,11 @@ function ListaClientes({ clientes = [], faturas = [], initialPesquisa, onInitial
     return list
   }, [clientes, pesquisa, ordenar])
 
+  const clientesVisiveis = useMemo(
+    () => clientesFiltradosEOrdenados.slice(0, visibleCount),
+    [clientesFiltradosEOrdenados, visibleCount]
+  )
+  const temMais = visibleCount < clientesFiltradosEOrdenados.length
   const mostrarTabela = clientesFiltradosEOrdenados.length > 0
   const semDados = clientes.length === 0
   const semResultados = clientes.length > 0 && clientesFiltradosEOrdenados.length === 0
@@ -141,7 +153,7 @@ function ListaClientes({ clientes = [], faturas = [], initialPesquisa, onInitial
               </tr>
             </thead>
             <tbody>
-              {clientesFiltradosEOrdenados.map((c) => {
+              {clientesVisiveis.map((c) => {
                 const canRemoverEste = typeof permissoes.canRemoverEsteCliente === 'function' ? permissoes.canRemoverEsteCliente(c) : permissoes.canRemoverCliente
                 return (
                   <tr
@@ -190,6 +202,18 @@ function ListaClientes({ clientes = [], faturas = [], initialPesquisa, onInitial
               })}
             </tbody>
           </table>
+          {temMais && (
+            <div className="lista-faturas__carregar-mais">
+              <button
+                type="button"
+                className="lista-faturas__btn lista-faturas__btn--carregar"
+                onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
+                aria-label="Carregar mais clientes"
+              >
+                Carregar mais ({clientesFiltradosEOrdenados.length - visibleCount} restantes)
+              </button>
+            </div>
+          )}
         </div>
       )}
 

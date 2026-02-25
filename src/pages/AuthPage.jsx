@@ -44,11 +44,11 @@ function AuthPage({ onLogin }) {
       const user = users.find((u) => u.email && u.email.toLowerCase() === emailTrim)
       if (!user) {
         recordFailedLogin()
-        setErro('Email não encontrado.')
+        setErro('Não existe nenhuma conta com este email. Verifique o endereço ou registe-se.')
         return
       }
       if (user.ativo === false) {
-        setErro('Conta desativada. Contacte o administrador.')
+        setErro('A sua conta foi desativada. Contacte o administrador para reativar.')
         return
       }
 
@@ -63,9 +63,9 @@ function AuthPage({ onLogin }) {
         const result = recordFailedLogin()
         if (result.locked && result.lockoutUntil) {
           const mins = Math.ceil((result.lockoutUntil - Date.now()) / 60000)
-          setErro(`Muitas tentativas falhadas. Tente novamente dentro de ${mins} minuto(s).`)
+          setErro(`Demasiadas tentativas falhadas. Aguarde ${mins} minuto(s) antes de tentar novamente.`)
         } else {
-          setErro('Palavra-passe incorreta.')
+          setErro('A palavra-passe está incorreta. Tente novamente ou recupere-a se tiver esquecido.')
         }
         return
       }
@@ -97,13 +97,13 @@ function AuthPage({ onLogin }) {
 
     const pwdCheck = validatePasswordStrength(password)
     if (!pwdCheck.valid) {
-      setErro(pwdCheck.message || 'Palavra-passe inválida.')
+      setErro(pwdCheck.message || 'A palavra-passe deve ter pelo menos 8 caracteres, uma letra e um número.')
       return
     }
 
     const users = getUsers()
     if (users.some((u) => u.email && u.email.toLowerCase() === emailTrim)) {
-      setErro('Já existe uma conta com este email.')
+      setErro('Este email já está registado. Utilize outro ou faça login na sua conta.')
       return
     }
 
@@ -124,7 +124,7 @@ function AuthPage({ onLogin }) {
       setSession(createSession(novoUser.email))
       onLogin({ id: novoUser.id, nome: novoUser.nome, email: novoUser.email, role })
     } catch (err) {
-      setErro('Erro ao criar conta. Tente novamente.')
+      setErro('Ocorreu um erro ao criar a conta. Tente novamente ou contacte o suporte.')
     } finally {
       setLoading(false)
     }

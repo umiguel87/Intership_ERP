@@ -5,7 +5,9 @@ import ModalAlterarEstadoFatura from './ModalAlterarEstadoFatura'
 import FaturaPrintView from './FaturaPrintView'
 import { toCsv, downloadCsv } from '../../utils/csvExport'
 import { getProximoNumeroFatura } from '../../utils/numeroFatura'
-import { formatarData, formatarMoeda } from '../../utils/formatadores'
+import { formatarData, formatarMoeda, isFaturaEmAtraso } from '../../utils/formatadores'
+
+const PAGE_SIZE = 20
 import { ESTADOS_FATURA } from '../../constants/roles'
 
 const OPCOES_ESTADO = ['', ...ESTADOS_FATURA]
@@ -43,6 +45,11 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
   const [faturaAEditar, setFaturaAEditar] = useState(null)
   const [faturaAImprimir, setFaturaAImprimir] = useState(null)
   const [faturaAAlterarEstado, setFaturaAAlterarEstado] = useState(null)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE)
+  }, [pesquisa, filtroEstado, filtroCliente, dataDe, dataAte, ordenar])
 
   useEffect(() => {
     if (faturaDetalheFromSearch) {
@@ -97,6 +104,11 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
     return list
   }, [faturas, pesquisa, filtroEstado, filtroCliente, dataDe, dataAte, ordenar])
 
+  const faturasVisiveis = useMemo(
+    () => faturasFiltradasEOrdenadas.slice(0, visibleCount),
+    [faturasFiltradasEOrdenadas, visibleCount]
+  )
+  const temMais = visibleCount < faturasFiltradasEOrdenadas.length
   const mostrarTabela = faturasFiltradasEOrdenadas.length > 0
   const semDados = faturas.length === 0
   const semResultados = faturas.length > 0 && faturasFiltradasEOrdenadas.length === 0
@@ -264,20 +276,29 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
               </tr>
             </thead>
             <tbody>
-              {faturasFiltradasEOrdenadas.map((f) => {
+              {faturasVisiveis.map((f) => {
                 const estado = (f.estado || '').trim()
                 const isPaga = estado === 'Paga'
                 const isAnulada = estado === 'Anulada'
+                const emAtraso = isFaturaEmAtraso(f)
                 const canEditar = typeof permissoes.canEditarFatura === 'function' ? permissoes.canEditarFatura(f) : permissoes.canEditarFatura
                 const canRemover = typeof permissoes.canRemoverFatura === 'function' ? permissoes.canRemoverFatura(f) : permissoes.canRemoverFatura
                 const canAlterarEstado = typeof permissoes.canAlterarEstadoFatura === 'function' ? permissoes.canAlterarEstadoFatura(f) : permissoes.canAlterarEstadoFatura
+                const rowClass = [
+                  isPaga && 'lista-faturas__linha--paga',
+                  isAnulada && 'lista-faturas__linha--anulada',
+                  emAtraso && 'lista-faturas__linha--atraso',
+                ].filter(Boolean).join(' ')
                 return (
-                  <tr key={f.id} className={isPaga ? 'lista-faturas__linha--paga' : isAnulada ? 'lista-faturas__linha--anulada' : ''}>
+                  <tr key={f.id} className={rowClass || undefined}>
                     <td>{f.numero}</td>
                     <td>{formatarData(f.data)}</td>
                     <td>{f.cliente}</td>
                     <td className="lista-faturas__valor">{formatarMoeda(f.valor)}</td>
-                    <td>{f.estado || '—'}</td>
+                    <td>
+                      {f.estado || '—'}
+                      {emAtraso && <span className="lista-faturas__badge lista-faturas__badge--atraso" title="Data de vencimento ultrapassada">Em atraso</span>}
+                    </td>
                     <td>
                       <div className="lista-faturas__acoes-celula">
                         {isAnulada ? (
@@ -394,6 +415,18 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
               })}
             </tbody>
           </table>
+          {temMais && (
+            <div className="lista-faturas__carregar-mais">
+              <button
+                type="button"
+                className="lista-faturas__btn lista-faturas__btn--carregar"
+                onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
+                aria-label="Carregar mais faturas"
+              >
+                Carregar mais ({faturasFiltradasEOrdenadas.length - visibleCount} restantes)
+              </button>
+            </div>
+          )}
         </div>
       )}
 

@@ -156,6 +156,19 @@ function App() {
     () => faturasList.filter((f) => (f.estado || '').trim() === 'Por pagar').length,
     [faturasList]
   )
+  const hoje = useMemo(() => new Date().toISOString().slice(0, 10), [])
+  const faturasEmAtraso = useMemo(
+    () =>
+      faturasList.filter(
+        (f) => (f.estado || '').trim() === 'Por pagar' && (f.data || '').slice(0, 10) < hoje
+      ),
+    [faturasList, hoje]
+  )
+  const numFaturasEmAtraso = faturasEmAtraso.length
+  const totalEmAtraso = useMemo(
+    () => faturasEmAtraso.reduce((sum, f) => sum + (f.valor ?? 0), 0),
+    [faturasEmAtraso]
+  )
 
   const log = (action, entity, entityId, detalhe) => {
     addLog({ userEmail: user?.email, role: user?.role, action, entity, entityId, detalhe })
@@ -330,8 +343,14 @@ function App() {
               numFaturas={faturasList.length}
               numClientes={clientes.length}
               numFaturasPorPagar={numFaturasPorPagar}
+              numFaturasEmAtraso={numFaturasEmAtraso}
+              totalEmAtraso={totalEmAtraso}
               faturas={faturasList}
               onMudarSecao={setSecaoAtiva}
+              onAbrirFatura={(fatura) => {
+                setSecaoAtiva('faturas')
+                setFaturaDetalheFromSearch(fatura)
+              }}
             />
           )}
 

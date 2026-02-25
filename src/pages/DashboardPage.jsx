@@ -1,9 +1,9 @@
 import Dashboard from '../components/dashboard/Dashboard'
 import GraficoFaturas from '../components/dashboard/GraficoFaturas'
 import GraficoVendasMes from '../components/dashboard/GraficoVendasMes'
-import UltimasFaturas from '../components/dashboard/UltimasFaturas'
+import CalendarioFaturas from '../components/dashboard/CalendarioFaturas'
 
-function DashboardPage({ totalVendas, totalPorPagar, totalPago, numFaturas, numClientes, numFaturasPorPagar, faturas, onMudarSecao }) {
+function DashboardPage({ totalVendas, totalPorPagar, totalPago, numFaturas, numClientes, numFaturasPorPagar, numFaturasEmAtraso = 0, totalEmAtraso = 0, faturas, onMudarSecao, onAbrirFatura }) {
   return (
     <>
       <Dashboard
@@ -13,13 +13,15 @@ function DashboardPage({ totalVendas, totalPorPagar, totalPago, numFaturas, numC
         numFaturas={numFaturas}
         numClientes={numClientes}
         numFaturasPorPagar={numFaturasPorPagar}
+        numFaturasEmAtraso={numFaturasEmAtraso}
+        totalEmAtraso={totalEmAtraso}
         onIrParaContasAReceber={onMudarSecao ? () => onMudarSecao('contas-a-receber') : undefined}
       />
       <div className="dashboard__graficos">
         <GraficoFaturas faturas={faturas || []} />
         <GraficoVendasMes faturas={faturas || []} />
       </div>
-      <UltimasFaturas faturas={faturas || []} max={5} />
+      <CalendarioFaturas faturas={faturas || []} onMudarSecao={onMudarSecao} onAbrirFatura={onAbrirFatura} />
       {numFaturas === 0 && (
         <div className="dashboard-empty" role="status">
           <strong>Sem dados ainda</strong>

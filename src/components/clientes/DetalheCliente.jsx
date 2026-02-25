@@ -5,6 +5,10 @@ function DetalheCliente({ cliente, faturas = [], onFechar }) {
   if (!cliente) return null
 
   const faturasDoCliente = faturas.filter((f) => (f.cliente || '').trim() === (cliente.nome || '').trim())
+  const totalFaturado = faturasDoCliente.reduce((s, f) => s + (f.valor ?? 0), 0)
+  const totalPorPagar = faturasDoCliente
+    .filter((f) => (f.estado || '').trim() === 'Por pagar')
+    .reduce((s, f) => s + (f.valor ?? 0), 0)
 
   return (
     <Modal aberto={!!cliente} onFechar={onFechar}>
@@ -19,6 +23,16 @@ function DetalheCliente({ cliente, faturas = [], onFechar }) {
             <dd>{cliente.email || '—'}</dd>
             <dt>NIF</dt>
             <dd>{cliente.nif || '—'}</dd>
+          </dl>
+        </div>
+
+        <div className="detalhe-cliente__resumo">
+          <h3 className="detalhe-cliente__subtitulo">Resumo</h3>
+          <dl className="detalhe-cliente__dl detalhe-cliente__dl--resumo">
+            <dt>Total faturado</dt>
+            <dd>{formatarMoeda(totalFaturado)}</dd>
+            <dt>Total por pagar</dt>
+            <dd>{formatarMoeda(totalPorPagar)}</dd>
           </dl>
         </div>
 

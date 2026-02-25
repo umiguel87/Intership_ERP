@@ -1,26 +1,43 @@
 import TotalVendas from './TotalVendas'
 import { formatarMoeda } from '../../utils/formatadores'
 
-function Dashboard({ totalVendas, totalPorPagar = 0, totalPago = 0, numFaturas, numClientes = 0, numFaturasPorPagar = 0, onIrParaContasAReceber }) {
+function Dashboard({ totalVendas, totalPorPagar = 0, totalPago = 0, numFaturas, numClientes = 0, numFaturasPorPagar = 0, numFaturasEmAtraso = 0, totalEmAtraso = 0, onIrParaContasAReceber }) {
   const temPorPagar = numFaturasPorPagar > 0
+  const temEmAtraso = numFaturasEmAtraso > 0
 
   return (
     <div className="dashboard">
       <TotalVendas total={totalVendas} />
-      {temPorPagar && onIrParaContasAReceber && (
+      {onIrParaContasAReceber && (temEmAtraso || temPorPagar) && (
         <div className="dashboard__alertas">
-          <div className="dashboard__alerta">
-            <span className="dashboard__alerta-texto">
-              <strong>{numFaturasPorPagar}</strong> fatura(s) por pagar · Total: <strong>{formatarMoeda(totalPorPagar)}</strong>
-            </span>
-            <button
-              type="button"
-              className="dashboard__alerta-btn"
-              onClick={onIrParaContasAReceber}
-            >
-              Ver Contas a Receber
-            </button>
-          </div>
+          {temEmAtraso && (
+            <div className="dashboard__alerta dashboard__alerta--atraso">
+              <span className="dashboard__alerta-texto">
+                <strong>{numFaturasEmAtraso}</strong> fatura(s) em atraso · Total: <strong>{formatarMoeda(totalEmAtraso)}</strong>
+              </span>
+              <button
+                type="button"
+                className="dashboard__alerta-btn"
+                onClick={onIrParaContasAReceber}
+              >
+                Ver Contas a Receber
+              </button>
+            </div>
+          )}
+          {temPorPagar && (
+            <div className="dashboard__alerta">
+              <span className="dashboard__alerta-texto">
+                <strong>{numFaturasPorPagar}</strong> fatura(s) por pagar · Total: <strong>{formatarMoeda(totalPorPagar)}</strong>
+              </span>
+              <button
+                type="button"
+                className="dashboard__alerta-btn"
+                onClick={onIrParaContasAReceber}
+              >
+                Ver Contas a Receber
+              </button>
+            </div>
+          )}
         </div>
       )}
       <div className="dashboard__cards">
