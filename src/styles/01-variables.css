@@ -1,0 +1,12 @@
+/* ========== 01 VARIÁVEIS (tema) ========== */
+/* Cores e tokens: --lt-primary, --lt-accent, etc. */
+:root {
+  --lt-primary: #1e40af;
+  --lt-primary-hover: #1d4ed8;
+  --lt-accent: #2563eb;
+  --lt-accent-light: #3b82f6;
+  --lt-bg: #eff6ff;
+  --lt-bg-strong: #dbeafe;
+  --lt-sidebar: #1e40af;
+  --lt-sidebar-active: #fff;
+}

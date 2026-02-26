@@ -17,6 +17,13 @@ const ORDENACAO_OPCOES = [
   { value: 'cliente-desc', label: 'Cliente (Z–A)' },
 ]
 
+const COLUNAS_CSV_EXPORT = [
+  { key: 'numero', label: 'Nº' },
+  { key: 'data', label: 'Data' },
+  { key: 'cliente', label: 'Cliente' },
+  { key: 'valor', label: 'Valor' },
+]
+
 function ContasAReceberPage({ faturas = [], onEditarFatura, onNotificar, permissoes = {}, onAbrirFatura }) {
   const [faturaAAlterarEstado, setFaturaAAlterarEstado] = useState(null)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
@@ -79,19 +86,13 @@ function ContasAReceberPage({ faturas = [], onEditarFatura, onNotificar, permiss
   const canAlterarEstado = permissoes.canMarcarFaturaPaga || permissoes.canMarcarFaturaAnulada
 
   const handleExportarCsv = () => {
-    const colunas = [
-      { key: 'numero', label: 'Nº' },
-      { key: 'data', label: 'Data' },
-      { key: 'cliente', label: 'Cliente' },
-      { key: 'valor', label: 'Valor' },
-    ]
     const dados = listaFiltrada.map((f) => ({
       numero: f.numero,
       data: formatarData(f.data),
       cliente: f.cliente,
       valor: formatarMoeda(f.valor),
     }))
-    const csv = toCsv(dados, colunas)
+    const csv = toCsv(dados, COLUNAS_CSV_EXPORT)
     downloadCsv(csv, 'contas-a-receber.csv')
     onNotificar?.('Exportação concluída.')
   }

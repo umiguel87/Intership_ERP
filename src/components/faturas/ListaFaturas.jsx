@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import ConfirmModal from '../ui/ConfirmModal'
 import ModalEditarFatura from './ModalEditarFatura'
 import ModalAlterarEstadoFatura from './ModalAlterarEstadoFatura'
@@ -6,10 +7,10 @@ import FaturaPrintView from './FaturaPrintView'
 import { toCsv, downloadCsv } from '../../utils/csvExport'
 import { getProximoNumeroFatura } from '../../utils/numeroFatura'
 import { formatarData, formatarMoeda, isFaturaEmAtraso } from '../../utils/formatadores'
-
-const PAGE_SIZE = 20
 import { ESTADOS_FATURA } from '../../constants/roles'
 
+const PAGE_SIZE = 20
+const DROPDOWN_ESTIMATED_HEIGHT = 280
 const OPCOES_ESTADO = ['', ...ESTADOS_FATURA]
 const OPCOES_ORDENAR = [
   { value: 'data-desc', label: 'Data (mais recente)' },
@@ -48,12 +49,19 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [mostrarFiltros, setMostrarFiltros] = useState(false)
   const [menuAbertoId, setMenuAbertoId] = useState(null)
+  const [triggerRect, setTriggerRect] = useState(null)
   const menuRef = useRef(null)
+  const dropdownRef = useRef(null)
 
   useEffect(() => {
     if (!menuAbertoId) return
     const handleClickFora = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuAbertoId(null)
+      const dentroMenu = menuRef.current?.contains(e.target)
+      const dentroDropdown = dropdownRef.current?.contains(e.target)
+      if (!dentroMenu && !dentroDropdown) {
+        setMenuAbertoId(null)
+        setTriggerRect(null)
+      }
     }
     document.addEventListener('mousedown', handleClickFora)
     return () => document.removeEventListener('mousedown', handleClickFora)
@@ -296,45 +304,18 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
                         <button
                           type="button"
                           className="lista-faturas__btn lista-faturas__btn--menu"
-                          onClick={() => setMenuAbertoId(menuAbertoId === f.id ? null : f.id)}
+                          onClick={(e) => {
+                            const id = menuAbertoId === f.id ? null : f.id
+                            if (id) setTriggerRect(e.currentTarget.getBoundingClientRect())
+                            else setTriggerRect(null)
+                            setMenuAbertoId(id)
+                          }}
                           aria-expanded={menuAbertoId === f.id}
                           aria-haspopup="true"
                           aria-label={`Ações da fatura ${f.numero}`}
                         >
                           ⋮
                         </button>
-                        {menuAbertoId === f.id && (
-                          <div className="lista-faturas__dropdown" role="menu">
-                            <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { setFaturaAImprimir(f); setMenuAbertoId(null) }}>
-                              Ver / Descarregar PDF
-                            </button>
-                            {!isAnulada && canEditar && (
-                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { setFaturaAEditar(f); setMenuAbertoId(null) }}>
-                                Editar
-                              </button>
-                            )}
-                            {!isAnulada && canAlterarEstado && (
-                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { setFaturaAAlterarEstado(f); setMenuAbertoId(null) }}>
-                                Alterar estado
-                              </button>
-                            )}
-                            {isPaga && canAlterarEstado && (
-                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { onEditarFatura?.(f.id, { estado: 'Por pagar', justificacao: '' }); onNotificar?.('Fatura reativada.'); setMenuAbertoId(null) }}>
-                                Reativar
-                              </button>
-                            )}
-                            {canCriarFatura && (
-                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { handleDuplicar(f); setMenuAbertoId(null) }}>
-                                Duplicar
-                              </button>
-                            )}
-                            {!isAnulada && canRemover && (
-                              <button type="button" role="menuitem" className="lista-faturas__dropdown-item lista-faturas__dropdown-item--remover" onClick={() => { setConfirmRemoverId(f.id); setMenuAbertoId(null) }}>
-                                Remover
-                              </button>
-                            )}
-                          </div>
-                        )}
                       </div>
                     </td>
                   </tr>
@@ -342,6 +323,59 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
               })}
             </tbody>
           </table>
+          {menuAbertoId && triggerRect && (() => {
+            const f = faturasVisiveis.find((x) => x.id === menuAbertoId)
+            if (!f) return null
+            const estado = (f.estado || '').trim()
+            const isPaga = estado === 'Paga'
+            const isAnulada = estado === 'Anulada'
+            const canEditar = typeof permissoes.canEditarFatura === 'function' ? permissoes.canEditarFatura(f) : permissoes.canEditarFatura
+            const canRemover = typeof permissoes.canRemoverFatura === 'function' ? permissoes.canRemoverFatura(f) : permissoes.canRemoverFatura
+            const canAlterarEstado = typeof permissoes.canAlterarEstadoFatura === 'function' ? permissoes.canAlterarEstadoFatura(f) : permissoes.canAlterarEstadoFatura
+            const openAbove = triggerRect.bottom + DROPDOWN_ESTIMATED_HEIGHT > window.innerHeight
+            const dropdownStyle = {
+              position: 'fixed',
+              top: openAbove ? 'auto' : triggerRect.bottom + 4,
+              bottom: openAbove ? window.innerHeight - triggerRect.top + 4 : 'auto',
+              right: window.innerWidth - triggerRect.right,
+              minWidth: '11rem',
+              zIndex: 9999,
+            }
+            const close = () => { setMenuAbertoId(null); setTriggerRect(null) }
+            return createPortal(
+              <div ref={dropdownRef} className="lista-faturas__dropdown lista-faturas__dropdown--fixed" style={dropdownStyle} role="menu">
+                <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { setFaturaAImprimir(f); close() }}>
+                  Ver / Descarregar PDF
+                </button>
+                {!isAnulada && canEditar && (
+                  <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { setFaturaAEditar(f); close() }}>
+                    Editar
+                  </button>
+                )}
+                {!isAnulada && canAlterarEstado && (
+                  <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { setFaturaAAlterarEstado(f); close() }}>
+                    Alterar estado
+                  </button>
+                )}
+                {isPaga && canAlterarEstado && (
+                  <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { onEditarFatura?.(f.id, { estado: 'Por pagar', justificacao: '' }); onNotificar?.('Fatura reativada.'); close() }}>
+                    Reativar
+                  </button>
+                )}
+                {canCriarFatura && (
+                  <button type="button" role="menuitem" className="lista-faturas__dropdown-item" onClick={() => { handleDuplicar(f); close() }}>
+                    Duplicar
+                  </button>
+                )}
+                {!isAnulada && canRemover && (
+                  <button type="button" role="menuitem" className="lista-faturas__dropdown-item lista-faturas__dropdown-item--remover" onClick={() => { setConfirmRemoverId(f.id); close() }}>
+                    Remover
+                  </button>
+                )}
+              </div>,
+              document.body
+            )
+          })()}
           {temMais && (
             <div className="lista-faturas__carregar-mais">
               <button

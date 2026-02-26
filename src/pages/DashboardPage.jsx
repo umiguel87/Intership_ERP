@@ -3,7 +3,7 @@ import GraficoFaturas from '../components/dashboard/GraficoFaturas'
 import GraficoVendasMes from '../components/dashboard/GraficoVendasMes'
 import CalendarioFaturas from '../components/dashboard/CalendarioFaturas'
 
-function DashboardPage({ totalVendas, totalPorPagar, totalPago, numFaturas, numClientes, numFaturasPorPagar, numFaturasEmAtraso = 0, totalEmAtraso = 0, faturas, onMudarSecao, onAbrirFatura }) {
+function DashboardPage({ totalVendas, totalPorPagar, totalPago, numFaturas, numClientes, numFaturasPorPagar, numFaturasEmAtraso = 0, totalEmAtraso = 0, faturas, onMudarSecao, onAbrirFatura, darkMode = false }) {
   return (
     <>
       <Dashboard
@@ -18,8 +18,8 @@ function DashboardPage({ totalVendas, totalPorPagar, totalPago, numFaturas, numC
         onIrParaContasAReceber={onMudarSecao ? () => onMudarSecao('contas-a-receber') : undefined}
       />
       <div className="dashboard__graficos">
-        <GraficoFaturas faturas={faturas || []} />
-        <GraficoVendasMes faturas={faturas || []} />
+        <GraficoFaturas faturas={faturas || []} darkMode={darkMode} />
+        <GraficoVendasMes faturas={faturas || []} darkMode={darkMode} />
       </div>
       <CalendarioFaturas faturas={faturas || []} onMudarSecao={onMudarSecao} onAbrirFatura={onAbrirFatura} />
       {numFaturas === 0 && (

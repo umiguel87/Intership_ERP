@@ -40,6 +40,9 @@ import UtilizadoresPage from './pages/UtilizadoresPage'
 import DefinicoesPage from './pages/DefinicoesPage'
 import './App.css'
 
+const STORAGE_DARK = 'erp-dark-mode'
+const STORAGE_SIDEBAR_MIN = 'erp-sidebar-minimizado'
+
 function App() {
   const [user, setUser] = useState(null)
   const [secaoAtiva, setSecaoAtiva] = useState('dashboard')
@@ -50,8 +53,19 @@ function App() {
   const [pendingClienteSearch, setPendingClienteSearch] = useState(null)
   const [faturaDetalheFromSearch, setFaturaDetalheFromSearch] = useState(null)
   const [clienteDetalheFromSearch, setClienteDetalheFromSearch] = useState(null)
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem(STORAGE_DARK) === '1')
+  const [sidebarMinimizado, setSidebarMinimizado] = useState(() => localStorage.getItem(STORAGE_SIDEBAR_MIN) === '1')
   const inicialLoadFeito = useRef(false)
   const inicialLoadClientesFeito = useRef(false)
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_DARK, darkMode ? '1' : '0')
+    document.body.classList.toggle('theme-dark', darkMode)
+  }, [darkMode])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_SIDEBAR_MIN, sidebarMinimizado ? '1' : '0')
+  }, [sidebarMinimizado])
 
   // Restaurar sessão ao carregar (só se válida e não expirada)
   useEffect(() => {
@@ -284,7 +298,7 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className={`app ${darkMode ? 'app--dark' : ''} ${sidebarMinimizado ? 'app--sidebar-minimizado' : ''}`}>
       <Toast
         show={toast.show}
         message={toast.message}
@@ -297,6 +311,8 @@ function App() {
         user={user}
         onLogout={handleLogout}
         permissoes={permissoes}
+        minimizado={sidebarMinimizado}
+        onToggleMinimizado={() => setSidebarMinimizado((v) => !v)}
       />
 
       <main className="app__main">
@@ -351,6 +367,7 @@ function App() {
                 setSecaoAtiva('faturas')
                 setFaturaDetalheFromSearch(fatura)
               }}
+              darkMode={darkMode}
             />
           )}
 
@@ -410,7 +427,11 @@ function App() {
           )}
 
           {secaoAtiva === 'definicoes' && permissoes.canVerLogs && (
-            <DefinicoesPage onNotificar={notificar} />
+            <DefinicoesPage
+              onNotificar={notificar}
+              darkMode={darkMode}
+              onDarkModeChange={setDarkMode}
+            />
           )}
 
           {secaoAtiva === 'logs' && permissoes.canVerLogs && (

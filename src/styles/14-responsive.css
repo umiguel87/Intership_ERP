@@ -1,0 +1,78 @@
+/* ========== 14 RESPONSIVO ========== */
+/* Media queries (ex.: 768px) */
+@media (max-width: 768px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    gap: 1rem;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .app__main,
+  .app--sidebar-minimizado .app__main {
+    margin-left: 0;
+  }
+
+  .sidebar__section-label {
+    display: none;
+  }
+
+  .sidebar__brand {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  .sidebar__nav {
+    flex-direction: row;
+    flex: 1;
+    justify-content: flex-end;
+    padding: 0;
+  }
+
+  .sidebar__footer {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .sidebar__section-label--config {
+    display: none;
+  }
+
+  .sidebar__item--footer {
+    width: auto;
+  }
+
+  .sidebar__sair {
+    width: auto;
+  }
+
+  .app__conteudo,
+  .app__topbar {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .pesquisa-global {
+    max-width: none;
+    order: 3;
+    width: 100%;
+  }
+
+  .form-fatura__form {
+    grid-template-columns: 1fr;
+  }
+}

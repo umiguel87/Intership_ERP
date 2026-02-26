@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { getFaturas, getClientes, getUsers, setFaturas, setClientes, setUsers } from '../storage'
 
-function DefinicoesPage({ onNotificar }) {
+function DefinicoesPage({ onNotificar, darkMode = false, onDarkModeChange }) {
   const inputFicheiroRef = useRef(null)
 
   const handleExportarBackup = () => {
@@ -54,9 +54,27 @@ function DefinicoesPage({ onNotificar }) {
       <div className="definicoes-page__cabecalho">
         <h2 className="definicoes-page__titulo">Definições</h2>
         <p className="definicoes-page__descricao">
-          Backup e restauro de dados (faturas, clientes e utilizadores).
+          Aparência, backup e restauro de dados (faturas, clientes e utilizadores).
         </p>
       </div>
+
+      <section className="definicoes-page__seccao">
+        <h3 className="definicoes-page__subtitulo">Aparência</h3>
+        <p className="definicoes-page__texto">
+          Ative o modo escuro para um tema mais confortável em ambientes com pouca luz.
+        </p>
+        <label className="definicoes-page__toggle-wrap">
+          <span className="definicoes-page__toggle-label">Modo escuro</span>
+          <input
+            type="checkbox"
+            className="definicoes-page__toggle-input"
+            checked={darkMode}
+            onChange={(e) => onDarkModeChange?.(e.target.checked)}
+            aria-label="Ativar ou desativar modo escuro"
+          />
+          <span className="definicoes-page__toggle-slider" aria-hidden />
+        </label>
+      </section>
 
       <section className="definicoes-page__seccao">
         <h3 className="definicoes-page__subtitulo">Backup</h3>

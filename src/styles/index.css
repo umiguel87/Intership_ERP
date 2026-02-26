@@ -1,0 +1,22 @@
+/**
+ * Índice dos estilos da aplicação ERP
+ * Ordem: variáveis → layout → componentes → páginas (por rota) → dark mode → responsivo
+ */
+
+@import './01-variables.css';
+@import './02-layout.css';
+@import './03-components-pesquisa.css';
+@import './08-components-ui.css';
+
+/* Páginas (um ficheiro por rota) */
+@import './pages/dashboard.css';
+@import './pages/faturas.css';
+@import './pages/clientes.css';
+@import './pages/contas-a-receber.css';
+@import './pages/logs.css';
+@import './pages/auth.css';
+@import './pages/utilizadores.css';
+@import './pages/definicoes.css';
+
+@import './13-dark-mode.css';
+@import './14-responsive.css';

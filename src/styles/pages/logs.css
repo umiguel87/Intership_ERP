@@ -1,0 +1,34 @@
+/* ========== PÁGINA — Logs ========== */
+.logs-page__cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.logs-page__titulo {
+  margin: 0 0 0.35rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+.logs-page__descricao {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+.logs-page__limpar {
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background: #fff;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.logs-page__limpar:hover {
+  background: #fef2f2;
+}

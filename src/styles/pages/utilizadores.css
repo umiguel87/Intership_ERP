@@ -1,0 +1,35 @@
+/* ========== PÁGINA — Utilizadores ========== */
+.utilizadores-page__cabecalho {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.utilizadores-page__cabecalho .lista-faturas__btn {
+  margin-left: 0;
+  margin-top: 0.5rem;
+}
+
+.utilizadores-page__titulo {
+  margin: 0 0 0.35rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.utilizadores-page__descricao {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+
+.utilizadores-page__lista {
+  margin-top: 0;
+}
+
+.utilizadores-page__lista .lista-faturas__acoes-celula {
+  justify-content: center;
+}
+.utilizadores-page__lista .lista-faturas__tabela th:last-child,
+.utilizadores-page__lista .lista-faturas__tabela td:last-child {
+  text-align: center;
+}

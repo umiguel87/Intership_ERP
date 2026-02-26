@@ -1,0 +1,192 @@
+/* ========== PÁGINA — Contas a Receber ========== */
+.contas-a-receber {
+  max-width: 100%;
+}
+.contas-a-receber__titulo {
+  margin: 0 0 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.contas-a-receber__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.contas-a-receber__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.contas-a-receber__card:hover:not(:disabled) {
+  border-color: var(--lt-accent-light);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.12);
+}
+.contas-a-receber__card--ativo {
+  border-color: var(--lt-primary);
+  background: #eff6ff;
+  box-shadow: 0 2px 10px rgba(30, 64, 175, 0.15);
+}
+.contas-a-receber__card:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.contas-a-receber__card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+}
+.contas-a-receber__card-valor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+}
+.contas-a-receber__card-count {
+  font-size: 0.8125rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+.contas-a-receber__card--atraso .contas-a-receber__card-valor {
+  color: #b91c1c;
+}
+.contas-a-receber__card--vencer .contas-a-receber__card-valor {
+  color: #15803d;
+}
+
+.contas-a-receber__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.contas-a-receber__filtros-tabs {
+  display: flex;
+  gap: 0.35rem;
+}
+.contas-a-receber__tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.contas-a-receber__tab:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+.contas-a-receber__tab--ativo {
+  background: var(--lt-primary);
+  border-color: var(--lt-primary);
+  color: #fff;
+}
+.contas-a-receber__tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.contas-a-receber__toolbar-direita {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+.contas-a-receber__pesquisa-wrap,
+.contas-a-receber__ordenar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.contas-a-receber__pesquisa-label,
+.contas-a-receber__ordenar-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.contas-a-receber__pesquisa {
+  min-width: 180px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+}
+.contas-a-receber__pesquisa:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+.contas-a-receber__ordenar {
+  min-width: 160px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  background: #fff;
+}
+.contas-a-receber__ordenar:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+.contas-a-receber__btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.contas-a-receber__btn--export {
+  background: #f0fdf4;
+  color: #15803d;
+  border-color: #bbf7d0;
+}
+.contas-a-receber__btn--export:hover {
+  background: #dcfce7;
+}
+
+.contas-a-receber__tabela-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+.contas-a-receber__linha-clicavel {
+  cursor: pointer;
+}
+.contas-a-receber__linha-clicavel:hover {
+  background: #f8fafc !important;
+}
+.contas-a-receber__linha-clicavel:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+.lista-faturas__vazia-celula {
+  padding: 2rem 1rem !important;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9375rem;
+}

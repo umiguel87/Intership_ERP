@@ -1,0 +1,133 @@
+/* ========== PÁGINA — Definições ========== */
+.definicoes-page__cabecalho {
+  margin-bottom: 1.5rem;
+}
+
+.definicoes-page__titulo {
+  margin: 0 0 0.35rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.definicoes-page__descricao {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+
+.definicoes-page__seccao {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.definicoes-page__subtitulo {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.definicoes-page__texto {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+
+.definicoes-page__btn {
+  padding: 0.55rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.definicoes-page__btn--export {
+  background: #2563eb;
+  color: #fff;
+}
+
+.definicoes-page__btn--export:hover {
+  background: #1d4ed8;
+}
+
+.definicoes-page__btn--import {
+  background: #fff;
+  color: #475569;
+  border-color: #e2e8f0;
+  margin-left: 0.5rem;
+}
+
+.definicoes-page__btn--import:hover {
+  background: #f8fafc;
+}
+
+.definicoes-page__file-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.definicoes-page__toggle-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.definicoes-page__toggle-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.definicoes-page__toggle-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.definicoes-page__toggle-slider {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  background: #cbd5e1;
+  border-radius: 26px;
+  transition: background 0.2s;
+}
+
+.definicoes-page__toggle-slider::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.definicoes-page__toggle-input:checked + .definicoes-page__toggle-slider {
+  background: var(--lt-primary);
+}
+
+.definicoes-page__toggle-input:checked + .definicoes-page__toggle-slider::after {
+  transform: translateX(22px);
+}
+
+.definicoes-page__toggle-input:focus-visible + .definicoes-page__toggle-slider {
+  box-shadow: 0 0 0 2px var(--lt-accent);
+}

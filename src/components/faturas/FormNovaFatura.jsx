@@ -86,7 +86,7 @@ function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar 
           />
         </div>
         {clientes.length > 0 ? (
-          <div className="form-fatura__campo">
+          <div className="form-fatura__campo form-fatura__campo--cliente">
             <label htmlFor="escolher-cliente">Cliente</label>
             <select
               id="escolher-cliente"
@@ -95,7 +95,7 @@ function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar 
               required
               aria-label="Selecionar cliente"
             >
-              <option value="">— Selecionar cliente —</option>
+              <option value="">Selecionar cliente</option>
               {clientes.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.nome} {c.email ? `(${c.email})` : ''}
@@ -104,7 +104,7 @@ function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar 
             </select>
           </div>
         ) : (
-          <div className="form-fatura__campo">
+          <div className="form-fatura__campo form-fatura__campo--cliente">
             <label htmlFor="cliente">Cliente</label>
             <input
               id="cliente"

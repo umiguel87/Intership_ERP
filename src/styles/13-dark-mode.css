@@ -1,0 +1,916 @@
+/* ========== 13 DARK MODE ========== */
+/* Overrides para .app.app--dark e body.theme-dark */
+body.theme-dark {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
+.app.app--dark {
+  color: #e2e8f0;
+}
+
+.app.app--dark .app__main {
+  background: #0f172a;
+}
+
+.app.app--dark .app__conteudo,
+.app.app--dark .app__conteudo p,
+.app.app--dark .app__conteudo span,
+.app.app--dark .app__conteudo td,
+.app.app--dark .app__conteudo th,
+.app.app--dark .app__conteudo h1,
+.app.app--dark .app__conteudo h2,
+.app.app--dark .app__conteudo h3,
+.app.app--dark .app__conteudo h4 {
+  color: inherit;
+}
+
+.app.app--dark .app__conteudo .lista-faturas__valor,
+.app.app--dark .app__conteudo .lista-faturas__tabela .lista-faturas__valor {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .app__topbar {
+  background: #1e293b !important;
+  border-bottom-color: #334155 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+.app.app--dark .app__titulo {
+  color: #f1f5f9;
+}
+
+.app.app--dark .app__subtitulo {
+  color: #94a3b8;
+}
+
+.app.app--dark .app__user {
+  color: #93c5fd;
+}
+
+.app.app--dark .app__conteudo {
+  color: #e2e8f0;
+}
+
+.app.app--dark .sidebar {
+  background: #1e293b;
+  border-right-color: #334155;
+  color: #e2e8f0;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+}
+
+.app.app--dark .sidebar__logo {
+  color: #93c5fd;
+}
+
+.app.app--dark .sidebar__nome {
+  color: #94a3b8;
+}
+
+.app.app--dark .sidebar__section-label {
+  color: #64748b;
+}
+
+.app.app--dark .sidebar__section-label--config {
+  border-top-color: #334155;
+}
+
+.app.app--dark .sidebar__item {
+  color: #94a3b8;
+}
+
+.app.app--dark .sidebar__item:hover {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+.app.app--dark .sidebar__item--ativo {
+  background: #1e3a5f;
+  color: #93c5fd;
+  border-left-color: #3b82f6;
+}
+
+.app.app--dark .sidebar__icon {
+  color: #94a3b8;
+}
+
+.app.app--dark .sidebar__item--ativo .sidebar__icon {
+  color: #93c5fd;
+}
+
+.app.app--dark .sidebar__sair {
+  color: #cbd5e1;
+  border-color: #475569;
+}
+
+.app.app--dark .sidebar__sair:hover {
+  background: #7f1d1d;
+  color: #fca5a5;
+  border-color: #991b1b;
+}
+
+.app.app--dark .sidebar__versao {
+  color: #94a3b8;
+}
+
+.app.app--dark .sidebar__toggle {
+  background: #334155;
+  border-color: #475569;
+  color: #94a3b8;
+}
+
+.app.app--dark .sidebar__toggle:hover {
+  background: #475569;
+  color: #f1f5f9;
+}
+
+
+/* Dark mode: cards e listas */
+.app.app--dark .lista-faturas,
+.app.app--dark .lista-clientes,
+.app.app--dark .contas-a-receber__tabela-card,
+.app.app--dark .contas-a-receber__card,
+.app.app--dark .form-fatura,
+.app.app--dark .form-fatura.form-cliente,
+.app.app--dark .definicoes-page__seccao,
+.app.app--dark .utilizadores-page__lista {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.app.app--dark .lista-faturas__titulo,
+.app.app--dark .contas-a-receber__titulo,
+.app.app--dark .form-fatura__titulo,
+.app.app--dark .utilizadores-page__titulo,
+.app.app--dark .definicoes-page__titulo {
+  color: #f1f5f9;
+}
+
+.app.app--dark .lista-faturas__tabela th {
+  background: #334155 !important;
+  color: #94a3b8 !important;
+  border-bottom-color: #475569 !important;
+}
+
+.app.app--dark .lista-faturas__tabela td,
+.app.app--dark .lista-faturas__tabela tbody tr {
+  border-bottom-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .lista-faturas__pesquisa,
+.app.app--dark .contas-a-receber__pesquisa,
+.app.app--dark .contas-a-receber__ordenar {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Select com seta customizada: usar background-color para não resetar repeat/position/size */
+.app.app--dark .lista-faturas__select {
+  background-color: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.5rem center !important;
+  background-size: 0.875rem !important;
+}
+
+.app.app--dark .lista-faturas__pesquisa::placeholder,
+.app.app--dark .contas-a-receber__pesquisa::placeholder {
+  color: #64748b;
+}
+
+.app.app--dark .form-fatura__campo label,
+.app.app--dark .lista-faturas__label-pesquisa,
+.app.app--dark .contas-a-receber__pesquisa-label,
+.app.app--dark .contas-a-receber__ordenar-label {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .form-fatura__campo input {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Select: usar background-color para não resetar seta (repeat/position/size) */
+.app.app--dark .form-fatura__campo select {
+  background-color: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.65rem center !important;
+  background-size: 1rem !important;
+}
+
+.app.app--dark .form-fatura__campo select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2393c5fd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+}
+
+.app.app--dark .form-fatura__input--readonly {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .form-fatura__submit:hover:not(:disabled) {
+  background: #1d4ed8 !important;
+  color: #fff !important;
+}
+
+.app.app--dark .contas-a-receber__card-label,
+.app.app--dark .contas-a-receber__card-count {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .contas-a-receber__card-valor {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .contas-a-receber__card {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.app.app--dark .contas-a-receber__card:hover:not(:disabled) {
+  border-color: #475569 !important;
+}
+
+.app.app--dark .contas-a-receber__card--ativo {
+  background: #1e3a5f !important;
+  border-color: #3b82f6 !important;
+}
+
+.app.app--dark .contas-a-receber__tab {
+  background: #334155;
+  border-color: #475569;
+  color: #94a3b8;
+}
+
+.app.app--dark .contas-a-receber__tab--ativo {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.app.app--dark .pesquisa-global__input {
+  background: #334155 !important;
+  border-color: #64748b !important;
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .pesquisa-global__input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .pesquisa-global__icon {
+  color: #cbd5e1 !important;
+}
+
+.app.app--dark .pesquisa-global__input-wrap:focus-within .pesquisa-global__icon {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .pesquisa-global__dropdown {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.app.app--dark .pesquisa-global__item {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .pesquisa-global__item:hover {
+  background: #334155 !important;
+}
+
+.app.app--dark .lista-faturas__vazia,
+.app.app--dark .utilizadores-page__descricao,
+.app.app--dark .definicoes-page__descricao,
+.app.app--dark .definicoes-page__texto {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .definicoes-page__toggle-label {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .grafico-wrapper,
+.app.app--dark .calendario-faturas {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+/* Cards do dashboard (resumo): fundo escuro e texto legível */
+.app.app--dark .dashboard__card {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.app.app--dark .dashboard__card:hover {
+  border-color: #475569 !important;
+  background: #334155 !important;
+}
+
+/* Faixa de alertas (ex.: "Ver Contas a Receber") */
+.app.app--dark .dashboard__alerta-wrapper {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.app.app--dark .dashboard__alerta-label,
+.app.app--dark .dashboard__alerta-num,
+.app.app--dark .dashboard__alerta-total {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .dashboard__alerta--por-pagar .dashboard__alerta-num,
+.app.app--dark .dashboard__alerta--por-pagar .dashboard__alerta-total {
+  color: #fdba74 !important;
+}
+
+.app.app--dark .dashboard__alerta--atraso .dashboard__alerta-num,
+.app.app--dark .dashboard__alerta--atraso .dashboard__alerta-total {
+  color: #fca5a5 !important;
+}
+
+.app.app--dark .dashboard__alerta--atraso .dashboard__alerta-label {
+  color: #fca5a5 !important;
+}
+
+.app.app--dark .dashboard-card__titulo,
+.app.app--dark .calendario-faturas__titulo {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .modal__overlay {
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.app.app--dark .modal__conteudo {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .modal-editar__titulo {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .modal-editar__campo label {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .modal-editar__campo input,
+.app.app--dark .modal-editar__campo select {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Dark mode: dropdown de ações (⋮) — dentro de .app */
+.app.app--dark .lista-faturas__dropdown,
+.app.app--dark .lista-faturas__dropdown--fixed {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(71, 85, 105, 0.5) !important;
+}
+
+.app.app--dark .lista-faturas__dropdown-item {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .lista-faturas__dropdown-item:hover {
+  background: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .lista-faturas__dropdown-item--remover {
+  color: #fca5a5 !important;
+}
+
+.app.app--dark .lista-faturas__dropdown-item--remover:hover {
+  background: #7f1d1d !important;
+  color: #fecaca !important;
+}
+
+/*
+ * Menu de ações renderizado em document.body (portal) — sem .app como pai.
+ * Usar body.theme-dark para aplicar dark mode ao dropdown.
+ */
+body.theme-dark .lista-faturas__dropdown,
+body.theme-dark .lista-faturas__dropdown--fixed {
+  background: #1e293b !important;
+  border: 1px solid #475569 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(71, 85, 105, 0.5) !important;
+}
+
+body.theme-dark .lista-faturas__dropdown-item {
+  color: #e2e8f0 !important;
+}
+
+body.theme-dark .lista-faturas__dropdown-item:hover {
+  background: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+body.theme-dark .lista-faturas__dropdown-item--remover {
+  color: #fca5a5 !important;
+}
+
+body.theme-dark .lista-faturas__dropdown-item--remover:hover {
+  background: #7f1d1d !important;
+  color: #fecaca !important;
+}
+
+/* Botão ⋮ (menu de ações) na tabela */
+.app.app--dark .lista-faturas__btn--menu {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .lista-faturas__btn--menu:hover {
+  background: #475569 !important;
+  border-color: #64748b !important;
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .lista-faturas__btn--menu[aria-expanded="true"] {
+  background: #1e3a5f !important;
+  border-color: #3b82f6 !important;
+  color: #93c5fd !important;
+}
+
+/* Dark mode: botões de lista (editar, estado, exportar, etc.) */
+.app.app--dark .lista-faturas__btn,
+.app.app--dark .lista-faturas__btn--editar,
+.app.app--dark .lista-faturas__btn--estado,
+.app.app--dark .lista-faturas__btn--export,
+.app.app--dark .lista-faturas__btn--carregar,
+.app.app--dark .lista-faturas__btn--filtros,
+.app.app--dark .lista-faturas__remover,
+.app.app--dark .lista-faturas__btn--reativar,
+.app.app--dark .contas-a-receber__btn,
+.app.app--dark .contas-a-receber__btn--export {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .lista-faturas__btn--editar {
+  background: #1e3a5f !important;
+  border-color: #2563eb !important;
+}
+
+.app.app--dark .lista-faturas__btn--editar:hover {
+  background: #2563eb !important;
+  color: #fff !important;
+}
+
+.app.app--dark .lista-faturas__btn--estado,
+.app.app--dark .lista-faturas__btn--reativar {
+  background: #1e3a5f !important;
+  border-color: #3b82f6 !important;
+}
+
+.app.app--dark .lista-faturas__btn--estado:hover,
+.app.app--dark .lista-faturas__btn--reativar:hover {
+  background: #2563eb !important;
+}
+
+.app.app--dark .lista-faturas__btn--export,
+.app.app--dark .contas-a-receber__btn--export {
+  background: #14532d !important;
+  border-color: #166534 !important;
+  color: #bbf7d0 !important;
+}
+
+.app.app--dark .lista-faturas__btn--export:hover,
+.app.app--dark .contas-a-receber__btn--export:hover {
+  background: #166534 !important;
+  color: #dcfce7 !important;
+}
+
+.app.app--dark .lista-faturas__btn--carregar,
+.app.app--dark .lista-faturas__btn--filtros {
+  background: #334155 !important;
+  border-color: #475569 !important;
+}
+
+.app.app--dark .lista-faturas__btn--filtros-ativo {
+  background: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .lista-faturas__remover {
+  background: #7f1d1d !important;
+  border-color: #991b1b !important;
+  color: #fca5a5 !important;
+}
+
+.app.app--dark .lista-faturas__remover:hover {
+  background: #991b1b !important;
+  color: #fecaca !important;
+}
+
+.app.app--dark .lista-faturas__linha--atraso td {
+  color: #fecaca !important;
+}
+
+.app.app--dark .lista-faturas__badge--atraso {
+  background: #991b1b !important;
+  color: #fecaca !important;
+}
+
+.app.app--dark .lista-faturas__vazia-celula {
+  color: #94a3b8 !important;
+}
+
+/* Dark mode: Definições – botões */
+.app.app--dark .definicoes-page__btn--export {
+  background: #2563eb !important;
+  color: #fff !important;
+}
+
+.app.app--dark .definicoes-page__btn--export:hover {
+  background: #1d4ed8 !important;
+}
+
+.app.app--dark .definicoes-page__btn--import {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+  border-color: #475569 !important;
+}
+
+.app.app--dark .definicoes-page__btn--import:hover {
+  background: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .definicoes-page__subtitulo {
+  color: #f1f5f9 !important;
+}
+
+/* Dark mode: Logs */
+.app.app--dark .logs-page__titulo {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .logs-page__descricao {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .logs-page__limpar {
+  background: #7f1d1d !important;
+  border-color: #991b1b !important;
+  color: #fca5a5 !important;
+}
+
+.app.app--dark .logs-page__limpar:hover {
+  background: #991b1b !important;
+  color: #fecaca !important;
+}
+
+.app.app--dark .logs-page .lista-faturas__wrapper {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.app.app--dark .lista-faturas__input-data {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Dark mode: Faturas — filtros extra e checkboxes na tabela */
+.app.app--dark .lista-faturas__filtros-extra {
+  background: #334155 !important;
+  border-color: #475569 !important;
+}
+
+.app.app--dark .lista-faturas input[type="checkbox"] {
+  accent-color: #3b82f6;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.app.app--dark .lista-faturas__btn--imprimir {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .lista-faturas__btn--imprimir:hover {
+  background: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .lista-faturas__btn--duplicar {
+  background: #431407 !important;
+  border-color: #7c2d12 !important;
+  color: #fdba74 !important;
+}
+
+.app.app--dark .lista-faturas__btn--duplicar:hover {
+  background: #7c2d12 !important;
+  color: #fed7aa !important;
+}
+
+/* Dark mode: Modais */
+.app.app--dark .modal-editar__btn--sec {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+  border-color: #475569 !important;
+}
+
+.app.app--dark .modal-editar__btn--sec:hover {
+  background: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .modal-editar__btn--pri {
+  background: #2563eb !important;
+  color: #fff !important;
+}
+
+.app.app--dark .modal-editar__btn--pri:hover {
+  background: #1d4ed8 !important;
+}
+
+.app.app--dark .modal-editar__subtitulo {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .confirm-modal__titulo {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .confirm-modal__mensagem {
+  color: #cbd5e1 !important;
+}
+
+.app.app--dark .confirm-modal__btn--cancelar {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+  border-color: #475569 !important;
+}
+
+.app.app--dark .confirm-modal__btn--cancelar:hover {
+  background: #475569 !important;
+}
+
+/* Dark mode: Dashboard — labels dos cards legíveis */
+.app.app--dark .dashboard__card-label {
+  color: #cbd5e1 !important;
+}
+
+.app.app--dark .dashboard__card-extra {
+  color: #cbd5e1 !important;
+}
+
+.app.app--dark .dashboard__card-valor {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .dashboard__card--por-pagar .dashboard__card-valor {
+  color: #fdba74 !important;
+}
+
+.app.app--dark .dashboard__card--pago .dashboard__card-valor {
+  color: #93c5fd !important;
+}
+
+.app.app--dark .dashboard__alerta-btn {
+  color: #fff !important;
+}
+
+.app.app--dark .dashboard-empty {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .dashboard-empty strong {
+  color: #cbd5e1 !important;
+}
+
+.app.app--dark .grafico-faturas__titulo,
+.app.app--dark .grafico-faturas__vazio {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .grafico-faturas {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+/* Área de desenho dos gráficos (Recharts) em fundo escuro */
+.app.app--dark .grafico-faturas__wrapper,
+.app.app--dark .recharts-wrapper {
+  background: #1e293b !important;
+}
+
+.app.app--dark .recharts-surface {
+  background: #1e293b !important;
+}
+
+/*
+ * Gráficos com classe --dark (quando darkMode é passado como prop).
+ * Garante fundo escuro mesmo em portais e força o rect de fundo do SVG.
+ */
+.grafico-faturas--dark .grafico-faturas__wrapper,
+.grafico-faturas--dark .recharts-responsive-container,
+.grafico-faturas--dark .recharts-wrapper,
+.grafico-faturas--dark .recharts-surface {
+  background: #1e293b !important;
+  background-color: #1e293b !important;
+}
+
+/* Rect de fundo que o Recharts desenha dentro do SVG (evitar seletores que afetem as barras) */
+.grafico-faturas--dark .recharts-surface > rect:first-of-type,
+.grafico-faturas--dark .recharts-wrapper > svg > rect:first-of-type {
+  fill: #1e293b !important;
+}
+
+/* Gráficos Recharts: eixos e grelha legíveis em dark mode */
+.app.app--dark .recharts-text,
+.app.app--dark .recharts-cartesian-axis-tick text,
+.app.app--dark .recharts-legend-item-text,
+.grafico-faturas--dark .recharts-text,
+.grafico-faturas--dark .recharts-cartesian-axis-tick text,
+.grafico-faturas--dark .recharts-legend-item-text {
+  fill: #cbd5e1 !important;
+}
+
+.app.app--dark .recharts-cartesian-grid line,
+.grafico-faturas--dark .recharts-cartesian-grid line {
+  stroke: #475569 !important;
+}
+
+/* Cursor do tooltip ao passar o rato: tom escuro em vez do cinzento claro */
+.grafico-faturas--dark .recharts-tooltip-cursor,
+.app.app--dark .recharts-tooltip-cursor {
+  fill: rgba(51, 65, 85, 0.4) !important;
+  stroke: #475569 !important;
+}
+
+.app.app--dark .recharts-line,
+.app.app--dark .recharts-area {
+  stroke: #64748b;
+}
+
+/* Dark mode: Calendário — grelha e células com fundo escuro */
+.app.app--dark .calendario-faturas__mes,
+.app.app--dark .calendario-faturas__dia-nome {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .calendario-faturas__dias-semana {
+  background: #334155 !important;
+  border-bottom-color: #475569 !important;
+}
+
+.app.app--dark .calendario-faturas__dia-nome {
+  color: #cbd5e1 !important;
+}
+
+.app.app--dark .calendario-faturas__grid {
+  border-color: #334155 !important;
+  background: #1e293b !important;
+}
+
+.app.app--dark .calendario-faturas__dia {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .calendario-faturas__dia:hover:not(.calendario-faturas__dia--vazio) {
+  background: #334155 !important;
+}
+
+.app.app--dark .calendario-faturas__dia--selecionado {
+  background: #1e3a5f !important;
+  color: #93c5fd !important;
+  box-shadow: inset 0 0 0 2px #3b82f6 !important;
+}
+
+.app.app--dark .calendario-faturas__dia--vazio {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #475569 !important;
+}
+
+.app.app--dark .calendario-faturas__dia--hoje {
+  background: #1e3a5f !important;
+  color: #93c5fd !important;
+}
+
+.app.app--dark .calendario-faturas__dia--com-faturas {
+  background: #334155 !important;
+}
+
+.app.app--dark .calendario-faturas__dia--por-pagar {
+  background: #431407 !important;
+}
+
+.app.app--dark .calendario-faturas__btn {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .calendario-faturas__btn:hover {
+  background: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .calendario-faturas__legenda-item {
+  color: #cbd5e1 !important;
+}
+
+.app.app--dark .calendario-faturas__link {
+  color: #93c5fd !important;
+}
+
+.app.app--dark .calendario-faturas__link:hover {
+  color: #bfdbfe !important;
+}
+
+.app.app--dark .calendario-faturas__btn {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .calendario-faturas__painel {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.app.app--dark .calendario-faturas__painel-titulo {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .calendario-faturas__painel-vazio {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .calendario-faturas__lista {
+  color: #e2e8f0;
+}
+
+.app.app--dark .calendario-faturas__item {
+  border-color: #475569 !important;
+}
+
+.app.app--dark .calendario-faturas__item-btn {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .calendario-faturas__item-btn:hover {
+  background: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .calendario-faturas__item-num {
+  color: #93c5fd !important;
+}
+
+.app.app--dark .calendario-faturas__item-cliente {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .calendario-faturas__item-valor {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .calendario-faturas__item-estado {
+  color: #94a3b8 !important;
+}
+
+.app.app--dark .calendario-faturas__dia-num {
+  color: #e2e8f0 !important;
+}
+
+/* Dark mode: Ultimas faturas / Total vendas */
+.app.app--dark .ultimas-faturas__titulo {
+  color: #f1f5f9 !important;
+}
+
+.app.app--dark .ultimas-faturas__linha {
+  color: #e2e8f0 !important;
+}
+
+.app.app--dark .ultimas-faturas__link {
+  color: #93c5fd !important;
+}
+
+.app.app--dark .form-fatura__erro {
+  color: #fca5a5 !important;
+}
+

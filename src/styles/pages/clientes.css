@@ -1,0 +1,24 @@
+/* ========== PÁGINA — Clientes ========== */
+/* Overrides da lista (reutiliza .lista-faturas) na página de clientes */
+
+.lista-clientes__linha {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lista-clientes__linha:hover {
+  background: #f1f5f9;
+}
+
+.lista-clientes .lista-faturas__tabela tbody tr.lista-clientes__linha:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+.lista-clientes .lista-faturas__acoes-celula {
+  justify-content: center;
+}
+.lista-clientes .lista-faturas__tabela th:last-child,
+.lista-clientes .lista-faturas__tabela td:last-child {
+  text-align: center;
+}

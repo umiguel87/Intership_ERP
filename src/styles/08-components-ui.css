@@ -1,0 +1,441 @@
+/* ========== 08 COMPONENTES UI ========== */
+/* Modal, ConfirmModal, Toast, Detalhe cliente, Fatura impressão */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.confirm-modal {
+  padding: 1.5rem 1.75rem;
+  min-width: 320px;
+}
+
+.confirm-modal__titulo {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.confirm-modal__mensagem {
+  margin: 0 0 1.25rem;
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+
+.confirm-modal__botoes {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.confirm-modal__btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.confirm-modal__btn--confirmar {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.confirm-modal__btn--confirmar:hover {
+  background: #1d4ed8;
+}
+
+.confirm-modal__btn--perigo {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}
+
+.confirm-modal__btn--perigo:hover {
+  background: #b91c1c;
+}
+
+.modal-editar {
+  padding: 1.5rem 1.75rem;
+  min-width: 340px;
+}
+
+.modal-editar__titulo {
+  margin: 0 0 1.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.modal-editar__subtitulo {
+  margin: -0.75rem 0 1.25rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.modal-alterar-estado__opcoes {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.modal-alterar-estado__radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modal-alterar-estado__radio input {
+  width: 1rem;
+  height: 1rem;
+}
+
+.form-fatura__textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  resize: vertical;
+  min-height: 4rem;
+}
+
+.form-fatura__textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.modal-editar__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-editar__campo label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: 0.4rem;
+}
+
+.modal-editar__campo input,
+.modal-editar__campo select {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.9375rem;
+}
+
+.modal-editar__campo input:focus,
+.modal-editar__campo select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.modal-editar__botoes {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.modal-editar__btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.modal-editar__btn--sec {
+  background: #fff;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.modal-editar__btn--sec:hover {
+  background: #f8fafc;
+}
+
+.modal-editar__btn--pri {
+  background: #2563eb;
+  color: #fff;
+  border: 1px solid #2563eb;
+}
+
+.modal-editar__btn--pri:hover {
+  background: #1d4ed8;
+}
+
+/* ========== Detalhe cliente ========== */
+.detalhe-cliente {
+  padding: 2.5rem 3rem;
+  width: 92vw;
+  max-width: 1200px;
+  min-height: 85vh;
+  max-height: 95vh;
+  overflow-y: auto;
+}
+
+.detalhe-cliente__titulo {
+  margin: 0 0 1.75rem;
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.detalhe-cliente__info {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem 1.75rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.detalhe-cliente__resumo {
+  margin-bottom: 2rem;
+  padding: 1rem 1.75rem;
+  background: #eff6ff;
+  border-radius: 10px;
+  border: 1px solid #bfdbfe;
+}
+
+.detalhe-cliente__dl--resumo .detalhe-cliente__dl dt {
+  min-width: 7rem;
+}
+
+.detalhe-cliente__dl {
+  margin: 0;
+  display: grid;
+  gap: 0.5rem 1rem;
+  grid-template-columns: auto 1fr;
+}
+
+.detalhe-cliente__dl dt {
+  margin: 0;
+  font-weight: 600;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.detalhe-cliente__dl dd {
+  margin: 0;
+  color: #0f172a;
+}
+
+.detalhe-cliente__faturas {
+  margin-bottom: 1.75rem;
+}
+
+.detalhe-cliente__subtitulo {
+  margin: 0 0 1rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.detalhe-cliente__vazio {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #64748b;
+  padding: 0.75rem 0;
+}
+
+.detalhe-cliente__tabela-wrapper {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.detalhe-cliente__tabela {
+  margin: 0;
+}
+
+.detalhe-cliente__tabela th,
+.detalhe-cliente__tabela td {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+
+.detalhe-cliente__acoes {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+}
+
+/* ========== Toast ========== */
+.toast {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  padding: 0.75rem 1.25rem 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  z-index: 1100;
+  animation: toast-in 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 360px;
+}
+
+.toast--success {
+  background: #2563eb;
+  color: #fff;
+}
+
+.toast--error {
+  background: #dc2626;
+  color: #fff;
+}
+
+.toast__mensagem {
+  flex: 1;
+}
+
+.toast__fechar {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: inherit;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.toast__fechar-ico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.toast__fechar:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ========== Fatura para impressão ========== */
+.fatura-print-area {
+  padding: 1rem;
+}
+
+.fatura-print__header {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.fatura-print__titulo {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.fatura-print__numero {
+  margin: 0.35rem 0 0;
+  font-size: 1rem;
+  color: #64748b;
+}
+
+.fatura-print__tabela {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.fatura-print__tabela th,
+.fatura-print__tabela td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.fatura-print__tabela th {
+  width: 120px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.fatura-print__acoes {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .fatura-print-area,
+  .fatura-print-area * {
+    visibility: visible;
+  }
+  .fatura-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #fff;
+    padding: 2rem;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+

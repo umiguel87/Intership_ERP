@@ -1,0 +1,289 @@
+/* ========== 02 LAYOUT ========== */
+/* .app, .app__main, sidebar (incl. --minimizado), topbar */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app__main {
+  flex: 1;
+  margin-left: 260px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+  background: #f8fafc;
+  transition: margin-left 0.2s ease;
+}
+
+.app--sidebar-minimizado .app__main {
+  margin-left: 72px;
+}
+
+.app__conteudo {
+  flex: 1;
+  padding: 1.75rem 2rem 2rem;
+}
+
+/* ========== Sidebar (estilo claro, inspirado em dashboard moderno) ========== */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 260px;
+  flex-shrink: 0;
+  background: #fff;
+  color: #334155;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid #e2e8f0;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.04);
+  transition: width 0.2s ease;
+}
+
+.sidebar--minimizado {
+  width: 72px;
+  padding: 1rem 0;
+}
+
+.sidebar--minimizado .sidebar__nome,
+.sidebar--minimizado .sidebar__section-label,
+.sidebar--minimizado .sidebar__item-label,
+.sidebar--minimizado .sidebar__sair .sidebar__item-label {
+  display: none;
+}
+
+.sidebar--minimizado .sidebar__brand {
+  padding: 0.75rem;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar--minimizado .sidebar__logo {
+  font-size: 1.25rem;
+}
+
+.sidebar--minimizado .sidebar__item,
+.sidebar--minimizado .sidebar__item--footer {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.sidebar--minimizado .sidebar__nav {
+  padding: 0 0.5rem;
+}
+
+.sidebar--minimizado .sidebar__sair {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.sidebar--minimizado .sidebar__sair .sidebar__sair-icon {
+  display: inline-flex;
+  margin: 0;
+}
+
+.sidebar__item-label {
+  white-space: nowrap;
+}
+
+.sidebar__sair {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sidebar__sair .sidebar__sair-icon {
+  display: none;
+}
+
+.sidebar--minimizado .sidebar__sair .sidebar__sair-icon {
+  display: inline-flex;
+}
+
+.sidebar__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar__toggle:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.sidebar__brand {
+  padding: 0 1.25rem 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar__logo {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--lt-primary);
+}
+
+.sidebar__nome {
+  display: block;
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 0.15rem;
+}
+
+.sidebar__section-label {
+  display: block;
+  padding: 0.5rem 1.25rem 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sidebar__section-label--config {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.sidebar__nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0 0.75rem;
+}
+
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 10px;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+  border-left: 3px solid transparent;
+  padding-left: calc(1rem - 3px);
+}
+
+.sidebar__item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.sidebar__item--ativo {
+  background: #eff6ff;
+  color: var(--lt-primary);
+  border-left-color: var(--lt-accent);
+}
+
+.sidebar__item--ativo .sidebar__icon {
+  color: var(--lt-accent);
+}
+
+.sidebar__icon {
+  font-size: 1.15rem;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.sidebar__item:hover .sidebar__icon {
+  color: #475569;
+}
+
+.sidebar__footer {
+  padding: 0.5rem 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidebar__sair {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar__sair:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.sidebar__item--footer {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.sidebar__versao {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* ========== Top bar (dentro da área principal) ========== */
+.app__topbar {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1.25rem 2rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+
+.app__topbar-esq {
+  min-width: 0;
+}
+
+.app__titulo {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.app__subtitulo {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.app__user {
+  color: var(--lt-accent);
+  font-weight: 500;
+}
+
