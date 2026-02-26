@@ -31,10 +31,14 @@ function ContasAReceberPage({ faturas = [], onEditarFatura, onNotificar, permiss
   const [pesquisa, setPesquisa] = useState('')
   const [ordenacao, setOrdenacao] = useState('data-asc')
 
+  /** Faturas a receber: Emitida (ainda no prazo) e Por pagar (em cobrança/em atraso). */
   const porPagar = useMemo(
     () =>
       faturas
-        .filter((f) => (f.estado || '').trim() === 'Por pagar')
+        .filter((f) => {
+          const e = (f.estado || '').trim()
+          return e === 'Emitida' || e === 'Por pagar'
+        })
         .sort((a, b) => new Date(a.data || 0).getTime() - new Date(b.data || 0).getTime()),
     [faturas]
   )

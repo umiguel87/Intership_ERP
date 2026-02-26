@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { getSession, setSession, getFaturas, setFaturas, getUsers, getClientes, setClientes, addLog, extendSessionIfNeeded } from './storage'
 import { isSessionValid, INACTIVITY_TIMEOUT_MS } from './utils/security'
+import { getProximoNumeroFatura } from './utils/numeroFatura'
 import {
   ROLES,
   isAdmin,
@@ -15,6 +16,7 @@ import {
   canEditarCliente,
   canRemoverCliente,
   canVerLogs,
+  canVerDefinicoes,
   canVerContasAReceber,
 } from './constants/roles'
 
@@ -74,15 +76,23 @@ function App() {
       setSession(null)
       return
     }
-    if (session?.email) {
-      const users = getUsers()
-      const u = users.find((x) => x.email === session.email)
-      if (u && u.ativo !== false) {
-        const role = u.role && ROLES.includes(u.role) ? u.role : 'comercial'
-        setUser({ id: u.id, nome: u.nome, email: u.email, role })
-      } else {
-        setSession(null)
+    const users = getUsers()
+    const byCodigo = (x) => x.codigo && String(x.codigo).trim().toUpperCase() === String(session.codigo || '').trim().toUpperCase()
+    const byEmail = (x) => session.email && x.email && x.email.toLowerCase() === session.email.toLowerCase()
+    const u = session?.codigo
+      ? users.find(byCodigo)
+      : session?.email
+        ? users.find(byEmail)
+        : null
+    if (u && u.ativo !== false) {
+      const role = u.role && ROLES.includes(u.role) ? u.role : 'comercial'
+      setUser({ id: u.id, nome: u.nome, email: u.email, codigo: u.codigo, role })
+      // Migrar sessão antiga (email) para codigo
+      if (session.email && u.codigo) {
+        setSession({ codigo: u.codigo, expiresAt: session.expiresAt })
       }
+    } else {
+      setSession(null)
     }
   }, [])
 
@@ -149,6 +159,7 @@ function App() {
 
   const handleLogin = (loggedUser) => {
     setUser(loggedUser)
+    setSecaoAtiva('dashboard')
   }
 
   const handleLogout = () => {
@@ -156,8 +167,21 @@ function App() {
     setUser(null)
   }
 
-  const faturasList = Array.isArray(faturas) ? faturas : []
-  const totalVendas = useMemo(() => faturasList.reduce((sum, f) => sum + (f.valor ?? 0), 0), [faturasList])
+  const faturasList = useMemo(() => {
+    const list = Array.isArray(faturas) ? faturas : []
+    if (user?.role === 'financeiro') return list.filter((f) => f.createdBy === user?.id)
+    return list
+  }, [faturas, user?.role, user?.id])
+  const totalVendas = useMemo(
+    () =>
+      faturasList
+        .filter((f) => {
+          const e = (f.estado || '').trim()
+          return e !== 'Rascunho' && e !== 'Anulada'
+        })
+        .reduce((sum, f) => sum + (f.valor ?? 0), 0),
+    [faturasList]
+  )
   const totalPorPagar = useMemo(
     () => faturasList.filter((f) => (f.estado || '').trim() === 'Por pagar').reduce((sum, f) => sum + (f.valor ?? 0), 0),
     [faturasList]
@@ -185,7 +209,16 @@ function App() {
   )
 
   const log = (action, entity, entityId, detalhe) => {
-    addLog({ userEmail: user?.email, role: user?.role, action, entity, entityId, detalhe })
+    addLog({
+      userNome: user?.nome,
+      userCodigo: user?.codigo,
+      userEmail: user?.email,
+      role: user?.role,
+      action,
+      entity,
+      entityId,
+      detalhe,
+    })
   }
 
   const adicionarFatura = (novaFatura) => {
@@ -193,8 +226,9 @@ function App() {
       notificar('Sem permissão para criar faturas.', 'error')
       return
     }
-    setFaturasState((prev) => [...prev, novaFatura])
-    log('criar', 'fatura', novaFatura.id, `Fatura ${novaFatura.numero}`)
+    const comCriador = { ...novaFatura, createdBy: user?.id }
+    setFaturasState((prev) => [...prev, comCriador])
+    log('criar', 'fatura', novaFatura.id, novaFatura.numero ? `Fatura ${novaFatura.numero}` : 'Rascunho de fatura')
   }
 
   const removerFatura = (id) => {
@@ -204,7 +238,7 @@ function App() {
       return
     }
     setFaturasState((prev) => prev.filter((x) => x.id !== id))
-    log('remover', 'fatura', id, f ? `Fatura ${f.numero}` : '')
+    log('remover', 'fatura', id, f ? (f.numero ? `Fatura ${f.numero}` : 'Rascunho') : '')
   }
 
   const editarFatura = (id, dados) => {
@@ -216,6 +250,13 @@ function App() {
         notificar('Sem permissão para alterar estado da fatura.', 'error')
         return
       }
+      if (dados.estado === 'Emitida') {
+        if (!(f?.numero || '').trim()) dados = { ...dados, numero: getProximoNumeroFatura(faturas) }
+        dados = { ...dados, dataEmissao: new Date().toISOString(), emitidoPor: user?.id }
+      }
+      if (dados.estado === 'Paga') {
+        dados = { ...dados, dataPagamento: new Date().toISOString(), pagoPor: user?.id }
+      }
     } else {
       if (!canEditarFatura(user?.role, f?.estado)) {
         notificar('Sem permissão para editar esta fatura.', 'error')
@@ -223,7 +264,8 @@ function App() {
       }
     }
     setFaturasState((prev) => prev.map((x) => (x.id === id ? { ...x, ...dados } : x)))
-    log('editar', 'fatura', id, soEstado ? `Estado: ${dados.estado}` : 'Dados atualizados')
+    const detalheLog = soEstado ? `Estado: ${(f?.estado || '')} → ${dados.estado}${dados.numero ? ` (nº ${dados.numero})` : ''}` : 'Dados atualizados'
+    log('editar', 'fatura', id, detalheLog)
   }
 
   const adicionarCliente = (novoCliente) => {
@@ -241,11 +283,11 @@ function App() {
       return
     }
     const c = clientes.find((x) => x.id === id)
-    if (user?.role === 'comercial' && c) {
+    if (c) {
       const nomeCliente = (c.nome || '').trim()
       const temFaturas = nomeCliente && faturas.some((f) => (f.cliente || '').trim() === nomeCliente)
       if (temFaturas) {
-        notificar('Não pode remover um cliente com faturas associadas.', 'error')
+        notificar('Não pode remover um cliente com faturas associadas. Use Desativar.', 'error')
         return
       }
     }
@@ -280,14 +322,14 @@ function App() {
       canRemoverCliente: canRemoverCliente(user?.role),
       canRemoverEsteCliente: (cliente) => {
         if (!canRemoverCliente(user?.role)) return false
-        if (user?.role === 'comercial' && cliente) {
-          const nomeCliente = (cliente.nome || '').trim()
-          return !nomeCliente || !faturas.some((f) => (f.cliente || '').trim() === nomeCliente)
-        }
-        return true
+        if (!cliente) return true
+        const nomeCliente = (cliente.nome || '').trim()
+        const temFaturas = nomeCliente && faturas.some((f) => (f.cliente || '').trim() === nomeCliente)
+        return !temFaturas
       },
       canVerContasAReceber: canVerContasAReceber(user?.role),
       canVerLogs: canVerLogs(user?.role),
+      canVerDefinicoes: canVerDefinicoes(user?.role),
       isAdmin: isAdmin(user?.role),
     }),
     [user?.role, faturas]
@@ -426,11 +468,12 @@ function App() {
             />
           )}
 
-          {secaoAtiva === 'definicoes' && permissoes.canVerLogs && (
+          {secaoAtiva === 'definicoes' && permissoes.canVerDefinicoes && (
             <DefinicoesPage
               onNotificar={notificar}
               darkMode={darkMode}
               onDarkModeChange={setDarkMode}
+              canBackupRestore={permissoes.isAdmin}
             />
           )}
 

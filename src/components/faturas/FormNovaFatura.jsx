@@ -1,16 +1,14 @@
-import { useState, useMemo } from 'react'
-import { getProximoNumeroFatura } from '../../utils/numeroFatura'
+import { useState } from 'react'
 import { ESTADOS_FATURA } from '../../constants/roles'
 
 const ESTADO_RASCUNHO = 'Rascunho'
 
-function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar }) {
-  const proximoNumero = useMemo(() => getProximoNumeroFatura(faturas), [faturas])
-
+function FormNovaFatura({ clientes = [], onAdicionar, onNotificar }) {
   const [data, setData] = useState(new Date().toISOString().slice(0, 10))
   const [cliente, setCliente] = useState('')
   const [selectedClienteId, setSelectedClienteId] = useState('')
   const [valor, setValor] = useState('')
+  const [descricao, setDescricao] = useState('')
   const [estado, setEstado] = useState(ESTADO_RASCUNHO)
   const [erros, setErros] = useState({})
 
@@ -44,10 +42,10 @@ function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar 
     if (!validarComErros() || !onAdicionar) return
     const novaFatura = {
       id: crypto.randomUUID(),
-      numero: proximoNumero,
       data,
       cliente: cliente.trim(),
       valor: Number(valor),
+      descricao: (descricao || '').trim(),
       estado: estado || ESTADO_RASCUNHO,
     }
     onAdicionar(novaFatura)
@@ -56,6 +54,7 @@ function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar 
     setCliente('')
     setSelectedClienteId('')
     setValor('')
+    setDescricao('')
     setEstado(ESTADO_RASCUNHO)
     onNotificar?.('Fatura adicionada.')
   }
@@ -69,11 +68,12 @@ function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar 
           <input
             id="numero"
             type="text"
-            value={proximoNumero}
+            value="—"
             readOnly
             className="form-fatura__input--readonly"
-            aria-label="Número da fatura (gerado automaticamente)"
+            aria-label="Número atribuído ao emitir a fatura"
           />
+          <span className="form-fatura__hint">Atribuído ao passar a fatura a Emitida</span>
         </div>
         <div className="form-fatura__campo">
           <label htmlFor="data">Data</label>
@@ -85,7 +85,7 @@ function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar 
             required
           />
         </div>
-        {clientes.length > 0 ? (
+        {(clientes.filter((c) => c.ativo !== false).length > 0) ? (
           <div className="form-fatura__campo form-fatura__campo--cliente">
             <label htmlFor="escolher-cliente">Cliente</label>
             <select
@@ -96,7 +96,7 @@ function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar 
               aria-label="Selecionar cliente"
             >
               <option value="">Selecionar cliente</option>
-              {clientes.map((c) => (
+              {clientes.filter((c) => c.ativo !== false).map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.nome} {c.email ? `(${c.email})` : ''}
                 </option>
@@ -130,6 +130,17 @@ function FormNovaFatura({ faturas = [], clientes = [], onAdicionar, onNotificar 
             required
           />
           {erros.valor && <span className="form-fatura__erro">{erros.valor}</span>}
+        </div>
+        <div className="form-fatura__campo">
+          <label htmlFor="descricao">Descrição (opcional)</label>
+          <textarea
+            id="descricao"
+            value={descricao}
+            onChange={(e) => setDescricao(e.target.value)}
+            placeholder="Ex: Serviços de consultoria, licença anual..."
+            rows={3}
+            className="form-fatura__textarea"
+          />
         </div>
         <div className="form-fatura__campo">
           <label htmlFor="estado">Estado</label>

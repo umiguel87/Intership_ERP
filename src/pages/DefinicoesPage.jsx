@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { getFaturas, getClientes, getUsers, setFaturas, setClientes, setUsers } from '../storage'
 
-function DefinicoesPage({ onNotificar, darkMode = false, onDarkModeChange }) {
+function DefinicoesPage({ onNotificar, darkMode = false, onDarkModeChange, canBackupRestore = false }) {
   const inputFicheiroRef = useRef(null)
 
   const handleExportarBackup = () => {
@@ -54,7 +54,9 @@ function DefinicoesPage({ onNotificar, darkMode = false, onDarkModeChange }) {
       <div className="definicoes-page__cabecalho">
         <h2 className="definicoes-page__titulo">Definições</h2>
         <p className="definicoes-page__descricao">
-          Aparência, backup e restauro de dados (faturas, clientes e utilizadores).
+          {canBackupRestore
+            ? 'Aparência, backup e restauro de dados (faturas, clientes e utilizadores).'
+            : 'Ajuste a aparência da aplicação.'}
         </p>
       </div>
 
@@ -76,6 +78,7 @@ function DefinicoesPage({ onNotificar, darkMode = false, onDarkModeChange }) {
         </label>
       </section>
 
+      {canBackupRestore && (
       <section className="definicoes-page__seccao">
         <h3 className="definicoes-page__subtitulo">Backup</h3>
         <p className="definicoes-page__texto">
@@ -89,7 +92,9 @@ function DefinicoesPage({ onNotificar, darkMode = false, onDarkModeChange }) {
           Exportar backup
         </button>
       </section>
+      )}
 
+      {canBackupRestore && (
       <section className="definicoes-page__seccao">
         <h3 className="definicoes-page__subtitulo">Restauro</h3>
         <p className="definicoes-page__texto">
@@ -111,6 +116,7 @@ function DefinicoesPage({ onNotificar, darkMode = false, onDarkModeChange }) {
           Importar backup
         </button>
       </section>
+      )}
     </div>
   )
 }

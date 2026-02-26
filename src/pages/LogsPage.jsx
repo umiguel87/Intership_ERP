@@ -10,7 +10,6 @@ const PAGE_SIZE = 20
 function LogsPage() {
   const [logs, setLogs] = useState([])
   const [confirmarLimpar, setConfirmarLimpar] = useState(false)
-  const [filtroUser, setFiltroUser] = useState('')
   const [filtroDataDe, setFiltroDataDe] = useState('')
   const [filtroDataAte, setFiltroDataAte] = useState('')
   const [filtroAction, setFiltroAction] = useState('')
@@ -24,10 +23,6 @@ function LogsPage() {
 
   const logsFiltrados = useMemo(() => {
     let list = [...logs]
-    if (filtroUser.trim()) {
-      const p = filtroUser.trim().toLowerCase()
-      list = list.filter((l) => (l.userEmail || '').toLowerCase().includes(p))
-    }
     if (filtroDataDe) {
       list = list.filter((l) => (l.timestamp || '').slice(0, 10) >= filtroDataDe)
     }
@@ -38,7 +33,7 @@ function LogsPage() {
       list = list.filter((l) => (l.action || '') === filtroAction)
     }
     return list
-  }, [logs, filtroUser, filtroDataDe, filtroDataAte, filtroAction])
+  }, [logs, filtroDataDe, filtroDataAte, filtroAction])
 
   const logsVisiveis = useMemo(
     () => logsFiltrados.slice(0, visibleCount),
@@ -48,12 +43,7 @@ function LogsPage() {
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE)
-  }, [filtroUser, filtroDataDe, filtroDataAte, filtroAction])
-
-  const utilizadoresUnicos = useMemo(() => {
-    const set = new Set(logs.map((l) => l.userEmail).filter(Boolean))
-    return [...set].sort()
-  }, [logs])
+  }, [filtroDataDe, filtroDataAte, filtroAction])
 
   const handleLimparLogs = () => {
     clearLogs()
@@ -91,23 +81,6 @@ function LogsPage() {
 
       {logs.length > 0 && (
         <div className="lista-faturas__toolbar" style={{ marginBottom: '1rem' }}>
-          <div className="lista-faturas__campo-pesquisa">
-            <label htmlFor="logs-user" className="lista-faturas__label-pesquisa">Utilizador</label>
-            <input
-              id="logs-user"
-              type="text"
-              className="lista-faturas__pesquisa"
-              placeholder="Filtrar por email..."
-              value={filtroUser}
-              onChange={(e) => setFiltroUser(e.target.value)}
-              list="logs-user-list"
-            />
-            <datalist id="logs-user-list">
-              {utilizadoresUnicos.map((email) => (
-                <option key={email} value={email} />
-              ))}
-            </datalist>
-          </div>
           <div className="lista-faturas__campo-data">
             <label htmlFor="logs-data-de" className="lista-faturas__label-pesquisa">Data de</label>
             <input id="logs-data-de" type="date" className="lista-faturas__input-data" value={filtroDataDe} onChange={(e) => setFiltroDataDe(e.target.value)} />
@@ -136,7 +109,6 @@ function LogsPage() {
             <thead>
               <tr>
                 <th>Data/Hora</th>
-                <th>Utilizador</th>
                 <th>Role</th>
                 <th>Ação</th>
                 <th>Entidade</th>
@@ -147,7 +119,6 @@ function LogsPage() {
               {logsVisiveis.map((l) => (
                 <tr key={l.id}>
                   <td>{formatarDataHora(l.timestamp)}</td>
-                  <td>{l.userEmail ?? '—'}</td>
                   <td>{labelRole(l.role)}</td>
                   <td>{labelAction(l.action)}</td>
                   <td>{labelEntity(l.entity)}</td>

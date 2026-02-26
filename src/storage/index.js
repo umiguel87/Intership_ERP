@@ -50,18 +50,64 @@ export function setUsers(users) {
 
 /**
  * Cria 3 contas de teste (admin, comercial, financeiro) se ainda não existir nenhum utilizador.
- * Passwords são hasheadas de forma assíncrona; use seedUsersIfEmptyAsync após esta chamada
- * ou na primeira carga da app para garantir hashes.
+ * Login por código; sem email associado.
  */
 export function seedUsersIfEmpty() {
   const users = getUsers()
   if (users.length > 0) return
   const senha = 'Admin123'
   setUsers([
-    { id: 'seed-admin', nome: 'Admin', email: 'admin@teste.pt', password: senha, role: 'admin', ativo: true },
-    { id: 'seed-comercial', nome: 'Comercial', email: 'comercial@teste.pt', password: senha, role: 'comercial', ativo: true },
-    { id: 'seed-financeiro', nome: 'Financeiro', email: 'financeiro@teste.pt', password: senha, role: 'financeiro', ativo: true },
+    { id: 'seed-admin', codigo: '001', nome: 'Admin', role: 'admin', password: senha, ativo: true },
+    { id: 'seed-comercial', codigo: '002', nome: 'Comercial', role: 'comercial', password: senha, ativo: true },
+    { id: 'seed-financeiro', codigo: '003', nome: 'Financeiro', role: 'financeiro', password: senha, ativo: true },
   ])
+}
+
+/** IDs dos utilizadores de seed → códigos fixos para migração */
+const SEED_ID_TO_CODIGO = {
+  'seed-admin': '001',
+  'seed-comercial': '002',
+  'seed-financeiro': '003',
+}
+
+/**
+ * Garante que todos os utilizadores têm código (para migração de dados antigos).
+ * Contas de seed (por id) recebem sempre 001, 002, 003.
+ */
+export function ensureUsersHaveCodigo() {
+  const users = getUsers()
+  let changed = false
+  const used = new Set()
+  const next = users.map((u) => {
+    const seedCodigo = SEED_ID_TO_CODIGO[u?.id]
+    if (seedCodigo) {
+      const { email, ...rest } = u
+      const normalized = { ...rest, codigo: seedCodigo }
+      if (u.codigo !== seedCodigo || email != null) changed = true
+      used.add(seedCodigo)
+      return normalized
+    }
+    if (u.codigo && String(u.codigo).trim()) {
+      used.add(String(u.codigo).trim().toUpperCase())
+      return u
+    }
+    let codigo = ''
+    if (u.email) {
+      codigo = u.email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '').toUpperCase() || 'U'
+      if (!codigo) codigo = 'U'
+    }
+    if (!codigo) codigo = 'U'
+    let base = codigo
+    let n = 1
+    while (used.has(base.toUpperCase())) {
+      base = `${codigo}${n}`
+      n += 1
+    }
+    used.add(base.toUpperCase())
+    changed = true
+    return { ...u, codigo: base }
+  })
+  if (changed) setUsers(next)
 }
 
 /**
@@ -112,9 +158,11 @@ export function setSession(session) {
 /** Estende a expiração da sessão atual (chamar em atividade do utilizador). */
 export function extendSessionIfNeeded() {
   const session = getSession()
-  if (!session?.email) return
+  const id = session?.codigo ?? session?.email
+  if (!id) return
   setSession({
     ...session,
+    codigo: session.codigo || id,
     expiresAt: Date.now() + SESSION_DURATION_MS,
   })
 }

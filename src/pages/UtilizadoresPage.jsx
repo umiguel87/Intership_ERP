@@ -11,8 +11,8 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
   const [users, setUsersState] = useState([])
   const [editarUser, setEditarUser] = useState(null)
   const [mostrarCriar, setMostrarCriar] = useState(false)
-  const [form, setForm] = useState({ nome: '', email: '', role: 'comercial', novaPassword: '', confirmPassword: '' })
-  const [formCriar, setFormCriar] = useState({ nome: '', email: '', role: 'comercial', password: '', confirmPassword: '' })
+  const [form, setForm] = useState({ codigo: '', nome: '', role: 'comercial', novaPassword: '', confirmPassword: '' })
+  const [formCriar, setFormCriar] = useState({ codigo: '', nome: '', role: 'comercial', password: '', confirmPassword: '' })
   const [erros, setErros] = useState({})
   const [errosCriar, setErrosCriar] = useState({})
   const [confirmDesativar, setConfirmDesativar] = useState(null)
@@ -26,8 +26,8 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
   const handleAbrirEditar = (u) => {
     setEditarUser(u)
     setForm({
+      codigo: (u?.codigo || '').trim(),
       nome: (u?.nome || '').trim(),
-      email: (u?.email || '').trim(),
       role: ROLES.includes(u?.role) ? u.role : 'comercial',
       novaPassword: '',
       confirmPassword: '',
@@ -40,15 +40,17 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
     setErros({})
   }
 
+  const normalizarCodigo = (c) => String(c || '').trim().toUpperCase()
+
   const validar = () => {
     const e = {}
+    const codigoTrim = normalizarCodigo(form.codigo)
     const nomeTrim = sanitizeString(form.nome, 100)
-    const emailTrim = sanitizeString(form.email, 255).toLowerCase()
+    if (!codigoTrim) e.codigo = 'Código é obrigatório (usado para login).'
     if (!nomeTrim) e.nome = 'Nome é obrigatório.'
-    if (!emailTrim) e.email = 'Email é obrigatório.'
     const lista = getUsers().filter((x) => x.id !== editarUser?.id)
-    if (lista.some((x) => x.email && x.email.toLowerCase() === emailTrim)) {
-      e.email = 'Já existe um utilizador com este email.'
+    if (lista.some((x) => normalizarCodigo(x.codigo) === codigoTrim)) {
+      e.codigo = 'Já existe um utilizador com este código.'
     }
     if (form.novaPassword || form.confirmPassword) {
       const pwdCheck = validatePasswordStrength(form.novaPassword)
@@ -63,13 +65,13 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
 
   const handleGuardar = async () => {
     if (!editarUser || !validar()) return
+    const codigoTrim = normalizarCodigo(form.codigo)
     const nomeTrim = sanitizeString(form.nome, 100)
-    const emailTrim = sanitizeString(form.email, 255).toLowerCase()
     const lista = getUsers()
     const updated = lista.map((u) => {
       if (u.id !== editarUser.id) return u
-      const next = { ...u, nome: nomeTrim, email: emailTrim, role: form.role, ativo: u.ativo !== false }
-      return next
+      const { email, ...rest } = u
+      return { ...rest, codigo: codigoTrim, nome: nomeTrim, role: form.role, ativo: u.ativo !== false }
     })
 
     if (form.novaPassword && form.novaPassword === form.confirmPassword) {
@@ -87,19 +89,19 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
     handleFecharEditar()
     onNotificar?.('Utilizador guardado.')
 
-    if (currentUser?.id === editarUser.id && (nomeTrim !== currentUser.nome || emailTrim !== currentUser.email)) {
-      onUserUpdated?.({ ...currentUser, nome: nomeTrim, email: emailTrim, role: form.role })
+    if (currentUser?.id === editarUser.id && (codigoTrim !== currentUser.codigo || nomeTrim !== currentUser.nome)) {
+      onUserUpdated?.({ ...currentUser, codigo: codigoTrim, nome: nomeTrim, role: form.role })
     }
   }
 
   const validarCriar = () => {
     const e = {}
+    const codigoTrim = normalizarCodigo(formCriar.codigo)
     const nomeTrim = sanitizeString(formCriar.nome, 100)
-    const emailTrim = sanitizeString(formCriar.email, 255).toLowerCase()
+    if (!codigoTrim) e.codigo = 'Código é obrigatório (usado para login).'
     if (!nomeTrim) e.nome = 'Nome é obrigatório.'
-    if (!emailTrim) e.email = 'Email é obrigatório.'
-    if (getUsers().some((x) => x.email && x.email.toLowerCase() === emailTrim)) {
-      e.email = 'Já existe um utilizador com este email.'
+    if (getUsers().some((x) => normalizarCodigo(x.codigo) === codigoTrim)) {
+      e.codigo = 'Já existe um utilizador com este código.'
     }
     const pwdCheck = validatePasswordStrength(formCriar.password)
     if (!pwdCheck.valid) e.password = pwdCheck.message
@@ -112,14 +114,14 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
 
   const handleCriar = async () => {
     if (!validarCriar() || !canCriar) return
+    const codigoTrim = normalizarCodigo(formCriar.codigo)
     const nomeTrim = sanitizeString(formCriar.nome, 100)
-    const emailTrim = sanitizeString(formCriar.email, 255).toLowerCase()
     const salt = generateSalt()
     const passwordHash = await hashPassword(formCriar.password, salt)
     const novo = {
       id: crypto.randomUUID(),
+      codigo: codigoTrim,
       nome: nomeTrim,
-      email: emailTrim,
       role: ROLES.includes(formCriar.role) ? formCriar.role : 'comercial',
       passwordHash,
       salt,
@@ -129,7 +131,7 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
     setUsers([...lista, novo])
     setUsersState([...lista, novo])
     setMostrarCriar(false)
-    setFormCriar({ nome: '', email: '', role: 'comercial', password: '', confirmPassword: '' })
+    setFormCriar({ codigo: '', nome: '', role: 'comercial', password: '', confirmPassword: '' })
     setErrosCriar({})
     onNotificar?.('Utilizador criado.')
   }
@@ -158,7 +160,7 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
           <button
             type="button"
             className="lista-faturas__btn lista-faturas__btn--export"
-            onClick={() => { setMostrarCriar(true); setFormCriar({ nome: '', email: '', role: 'comercial', password: '', confirmPassword: '' }); setErrosCriar({}) }}
+            onClick={() => { setMostrarCriar(true); setFormCriar({ codigo: '', nome: '', role: 'comercial', password: '', confirmPassword: '' }); setErrosCriar({}) }}
           >
             Criar utilizador
           </button>
@@ -170,8 +172,8 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
           <table className="lista-faturas__tabela">
             <thead>
               <tr>
+                <th>Código</th>
                 <th>Nome</th>
-                <th>Email</th>
                 <th>Perfil</th>
                 {canAtivarDesativar && <th>Estado</th>}
                 <th>Ações</th>
@@ -180,8 +182,8 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
             <tbody>
               {users.map((u) => (
                 <tr key={u.id} className={u.ativo === false ? 'lista-faturas__linha--anulada' : ''}>
+                  <td>{u.codigo || '—'}</td>
                   <td>{u.nome || '—'}</td>
-                  <td>{u.email || '—'}</td>
                   <td>{labelRole(u.role)}</td>
                   {canAtivarDesativar && (
                     <td>{u.ativo === false ? 'Inativo' : 'Ativo'}</td>
@@ -236,14 +238,14 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
           <h3 className="modal-editar__titulo">Criar utilizador</h3>
           <form onSubmit={(e) => { e.preventDefault(); handleCriar() }} className="modal-editar__form">
             <div className="modal-editar__campo">
+              <label htmlFor="criar-codigo">Código do funcionário</label>
+              <input id="criar-codigo" type="text" value={formCriar.codigo} onChange={(e) => setFormCriar((f) => ({ ...f, codigo: e.target.value }))} placeholder="Ex: 001 ou F001 (usado para login)" />
+              {errosCriar.codigo && <span className="form-fatura__erro">{errosCriar.codigo}</span>}
+            </div>
+            <div className="modal-editar__campo">
               <label htmlFor="criar-nome">Nome</label>
               <input id="criar-nome" type="text" value={formCriar.nome} onChange={(e) => setFormCriar((f) => ({ ...f, nome: e.target.value }))} placeholder="Nome completo" />
               {errosCriar.nome && <span className="form-fatura__erro">{errosCriar.nome}</span>}
-            </div>
-            <div className="modal-editar__campo">
-              <label htmlFor="criar-email">Email</label>
-              <input id="criar-email" type="email" value={formCriar.email} onChange={(e) => setFormCriar((f) => ({ ...f, email: e.target.value }))} placeholder="email@exemplo.pt" />
-              {errosCriar.email && <span className="form-fatura__erro">{errosCriar.email}</span>}
             </div>
             <div className="modal-editar__campo">
               <label htmlFor="criar-role">Perfil</label>
@@ -277,6 +279,17 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
             onSubmit={(e) => { e.preventDefault(); handleGuardar() }}
           >
             <div className="modal-editar__campo">
+              <label htmlFor="util-codigo">Código do funcionário</label>
+              <input
+                id="util-codigo"
+                type="text"
+                value={form.codigo}
+                onChange={(e) => setForm((f) => ({ ...f, codigo: e.target.value }))}
+                placeholder="Ex: 001 (usado para login)"
+              />
+              {erros.codigo && <span className="form-fatura__erro">{erros.codigo}</span>}
+            </div>
+            <div className="modal-editar__campo">
               <label htmlFor="util-nome">Nome</label>
               <input
                 id="util-nome"
@@ -286,17 +299,6 @@ function UtilizadoresPage({ user: currentUser, onNotificar, onUserUpdated, onCur
                 placeholder="Nome completo"
               />
               {erros.nome && <span className="form-fatura__erro">{erros.nome}</span>}
-            </div>
-            <div className="modal-editar__campo">
-              <label htmlFor="util-email">Email</label>
-              <input
-                id="util-email"
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                placeholder="email@exemplo.pt"
-              />
-              {erros.email && <span className="form-fatura__erro">{erros.email}</span>}
             </div>
             <div className="modal-editar__campo">
               <label htmlFor="util-role">Perfil</label>

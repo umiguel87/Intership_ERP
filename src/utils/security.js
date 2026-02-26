@@ -179,24 +179,25 @@ export function getLoginLockoutStatus() {
 }
 
 /**
- * Cria objeto de sessão com expiração.
- * @param {string} email
- * @returns {{ email: string, expiresAt: number }}
+ * Cria objeto de sessão com expiração (identificado por código do funcionário).
+ * @param {string} codigo - Código do funcionário
+ * @returns {{ codigo: string, expiresAt: number }}
  */
-export function createSession(email) {
+export function createSession(codigo) {
   return {
-    email,
+    codigo: codigo && String(codigo).trim(),
     expiresAt: Date.now() + SESSION_DURATION_MS,
   }
 }
 
 /**
  * Verifica se a sessão ainda é válida (não expirou).
- * @param {{ email?: string, expiresAt?: number } | null} session
+ * @param {{ codigo?: string, email?: string, expiresAt?: number } | null} session
  * @returns {boolean}
  */
 export function isSessionValid(session) {
-  if (!session || !session.email) return false
+  const id = session?.codigo ?? session?.email
+  if (!session || !id) return false
   if (session.expiresAt != null && Date.now() > session.expiresAt) return false
   return true
 }

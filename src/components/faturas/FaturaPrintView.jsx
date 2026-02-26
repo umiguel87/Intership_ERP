@@ -29,13 +29,23 @@ function FaturaPrintView({ fatura, onFechar }) {
         ['Valor', formatarMoeda(fatura.valor)],
         ['Estado', fatura.estado || '—'],
       ]
+      if (fatura.descricao) {
+        dados.push(['Descrição', fatura.descricao])
+      }
       doc.setFontSize(10)
       dados.forEach(([label, value]) => {
         doc.setFont(undefined, 'bold')
         doc.text(label + ':', margin, y)
         doc.setFont(undefined, 'normal')
-        doc.text(String(value), margin + 45, y)
-        y += 8
+        const str = String(value)
+        if (str.length > 60) {
+          const linhas = doc.splitTextToSize(str, 170)
+          doc.text(linhas, margin + 45, y)
+          y += 8 * linhas.length
+        } else {
+          doc.text(str, margin + 45, y)
+          y += 8
+        }
       })
       if ((fatura.estado || '') === 'Anulada' && fatura.justificacao) {
         y += 4
@@ -82,6 +92,12 @@ function FaturaPrintView({ fatura, onFechar }) {
                 <th>Estado</th>
                 <td>{fatura.estado || '—'}</td>
               </tr>
+              {fatura.descricao && (
+                <tr>
+                  <th>Descrição</th>
+                  <td>{fatura.descricao}</td>
+                </tr>
+              )}
               {(fatura.estado || '') === 'Anulada' && fatura.justificacao && (
                 <tr>
                   <th>Justificação</th>

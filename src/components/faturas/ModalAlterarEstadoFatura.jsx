@@ -38,7 +38,7 @@ function ModalAlterarEstadoFatura({ fatura, estadosPermitidos = [], onGuardar, o
     <Modal aberto={!!fatura} onFechar={onFechar} ariaLabelledBy="modal-alterar-estado-titulo">
       <div className="modal-editar" role="document" aria-labelledby="modal-alterar-estado-titulo">
         <h2 id="modal-alterar-estado-titulo" className="modal-editar__titulo">Alterar estado da fatura</h2>
-        <p className="modal-editar__subtitulo">Fatura {fatura.numero}</p>
+        <p className="modal-editar__subtitulo">Fatura {fatura.numero || '—'}</p>
         <form className="modal-editar__form" onSubmit={handleSubmit}>
           <div className="form-fatura__campo">
             <label>Novo estado</label>

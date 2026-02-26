@@ -155,10 +155,13 @@ function ListaClientes({ clientes = [], faturas = [], initialPesquisa, onInitial
             <tbody>
               {clientesVisiveis.map((c) => {
                 const canRemoverEste = typeof permissoes.canRemoverEsteCliente === 'function' ? permissoes.canRemoverEsteCliente(c) : permissoes.canRemoverCliente
+                const nomeCliente = (c.nome || '').trim()
+                const temFaturas = nomeCliente && faturas.some((f) => (f.cliente || '').trim() === nomeCliente)
+                const ativo = c.ativo !== false
                 return (
                   <tr
                     key={c.id}
-                    className="lista-clientes__linha"
+                    className={`lista-clientes__linha ${!ativo ? 'lista-clientes__linha--inativo' : ''}`}
                     onClick={() => setClienteADetalhe(c)}
                     role="button"
                     tabIndex={0}
@@ -184,6 +187,27 @@ function ListaClientes({ clientes = [], faturas = [], initialPesquisa, onInitial
                           >
                             Editar
                           </button>
+                        )}
+                        {temFaturas && canEditar && (
+                          ativo ? (
+                            <button
+                              type="button"
+                              className="lista-faturas__btn lista-faturas__btn--estado"
+                              onClick={() => { onEditarCliente?.(c.id, { ...c, ativo: false }); onNotificar?.('Cliente desativado.') }}
+                              aria-label={`Desativar cliente ${c.nome}`}
+                            >
+                              Desativar
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              className="lista-faturas__btn lista-faturas__btn--reativar"
+                              onClick={() => { onEditarCliente?.(c.id, { ...c, ativo: true }); onNotificar?.('Cliente ativado.') }}
+                              aria-label={`Ativar cliente ${c.nome}`}
+                            >
+                              Ativar
+                            </button>
+                          )
                         )}
                         {canRemoverEste && (
                           <button

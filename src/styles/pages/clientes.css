@@ -15,6 +15,11 @@
   outline-offset: -2px;
 }
 
+.lista-clientes__linha--inativo td {
+  opacity: 0.7;
+  color: #64748b;
+}
+
 .lista-clientes .lista-faturas__acoes-celula {
   justify-content: center;
 }

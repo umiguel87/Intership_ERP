@@ -29,6 +29,7 @@ function FormNovoCliente({ onAdicionar, onNotificar }) {
       nome: nome.trim(),
       email: email.trim().toLowerCase(),
       nif: nif.trim() || undefined,
+      ativo: true,
     })
     setErros({})
     setNome('')

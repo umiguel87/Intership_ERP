@@ -15,51 +15,50 @@ export function isAdmin(role) {
   return role === ADMIN
 }
 
+/** Comercial não cria; Admin e Financeiro criam rascunhos */
 export function canCriarFatura(role) {
+  return role === ADMIN || role === FINANCEIRO
+}
+
+/** Pode remover fatura: apenas rascunhos; Comercial não pode remover */
+export function canRemoverFatura(role, estadoFatura) {
+  const e = (estadoFatura || '').trim()
+  if (e !== 'Rascunho') return false
+  return role === ADMIN || role === FINANCEIRO
+}
+
+/** Pode editar dados da fatura: Admin exceto Paga/Anulada; Comercial e Financeiro apenas Rascunho (não alterar valores após emissão) */
+export function canEditarFatura(role, estadoFatura) {
+  const e = (estadoFatura || '').trim()
+  if (e === 'Paga' || e === 'Anulada') return false
+  if (role === ADMIN) return true
+  if (role === COMERCIAL || role === FINANCEIRO) return e === 'Rascunho'
+  return false
+}
+
+/** Pode marcar fatura como Paga: Admin e Comercial (Financeiro não altera estados) */
+export function canMarcarFaturaPaga(role) {
   return role === ADMIN || role === COMERCIAL
 }
 
-/** Pode remover fatura: Admin sempre; Comercial só em Rascunho ou Emitida */
-export function canRemoverFatura(role, estadoFatura) {
-  const e = (estadoFatura || '').trim()
-  if (role === ADMIN) return true
-  if (role === COMERCIAL) return e === 'Rascunho' || e === 'Emitida'
-  return false
-}
-
-/** Pode editar dados da fatura (cliente, valor, data): Admin sempre; Comercial só se não for Anulada nem Paga */
-export function canEditarFatura(role, estadoFatura) {
-  const e = (estadoFatura || '').trim()
-  if (role === ADMIN) return true
-  if (role === COMERCIAL) return e !== 'Anulada' && e !== 'Paga'
-  return false
-}
-
-/** Pode marcar fatura como Paga (apenas Admin e Financeiro) */
-export function canMarcarFaturaPaga(role) {
-  return role === ADMIN || role === FINANCEIRO
-}
-
-/** Pode marcar fatura como Anulada (apenas Admin e Financeiro) */
+/** Pode marcar fatura como Anulada: Admin e Comercial */
 export function canMarcarFaturaAnulada(role) {
-  return role === ADMIN || role === FINANCEIRO
+  return role === ADMIN || role === COMERCIAL
 }
 
-/** Pode alterar estado da fatura (consoante estado atual): ninguém pode alterar uma Anulada */
+/** Pode alterar estado: não se estiver Paga ou Anulada. Admin sempre; Comercial em Rascunho/Emitida/Por pagar (emite e marca Paga); Financeiro nunca */
 export function canAlterarEstadoFatura(role, estadoFatura) {
   const e = (estadoFatura || '').trim()
-  if (e === 'Anulada') return false
+  if (e === 'Anulada' || e === 'Paga') return false
   if (role === ADMIN) return true
   if (role === COMERCIAL) return ['Rascunho', 'Emitida', 'Por pagar'].includes(e)
-  if (role === FINANCEIRO) return e === 'Por pagar'
   return false
 }
 
 /** Estados para os quais este perfil pode alterar (no modal de estado) */
 export function getEstadosPermitidosParaAlterar(role) {
   if (role === ADMIN) return [...ESTADOS_FATURA]
-  if (role === COMERCIAL) return ['Rascunho', 'Emitida', 'Por pagar']
-  if (role === FINANCEIRO) return ['Paga', 'Anulada']
+  if (role === COMERCIAL) return ['Emitida', 'Por pagar', 'Paga', 'Anulada']
   return []
 }
 
@@ -75,13 +74,18 @@ export function canRemoverCliente(role) {
   return role === ADMIN || role === COMERCIAL
 }
 
-/** Contas a Receber visível apenas para Admin e Financeiro */
+/** Contas a Receber: Admin e Comercial (Financeiro não tem acesso) */
 export function canVerContasAReceber(role) {
-  return role === ADMIN || role === FINANCEIRO
+  return role === ADMIN || role === COMERCIAL
 }
 
 export function canVerLogs(role) {
   return role === ADMIN
+}
+
+/** Definições (aparência, backup, restauro) visível para Admin, Comercial e Financeiro */
+export function canVerDefinicoes(role) {
+  return role === ADMIN || role === COMERCIAL || role === FINANCEIRO
 }
 
 export function canCriarUtilizador(role) {

@@ -93,6 +93,13 @@
   cursor: default;
 }
 
+.form-fatura__hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
 .form-fatura__acoes {
   grid-column: 1 / -1;
   margin-top: 0.25rem;
@@ -348,7 +355,7 @@
 .lista-faturas__td-acoes { width: 18%; }
 
 .lista-faturas__th-acoes,
-.lista-faturas__td-acoes { text-align: right; }
+.lista-faturas__td-acoes { text-align: center; }
 
 .lista-faturas__valor {
   text-align: right !important;
@@ -374,7 +381,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 0.6rem;
   flex-wrap: wrap;
 }

@@ -10,6 +10,7 @@ function ModalEditarFatura({ fatura, clientes = [], estadosPermitidos = [], conf
   const [data, setData] = useState('')
   const [cliente, setCliente] = useState('')
   const [valor, setValor] = useState('')
+  const [descricao, setDescricao] = useState('')
   const [estado, setEstado] = useState(ESTADO_POR_PAGAR)
   const [justificacao, setJustificacao] = useState('')
   const [erros, setErros] = useState({})
@@ -24,6 +25,7 @@ function ModalEditarFatura({ fatura, clientes = [], estadosPermitidos = [], conf
       const permitidos = estadosPermitidos.length > 0 ? ESTADOS_FATURA.filter((e) => estadosPermitidos.includes(e)) : ESTADOS_FATURA
       const estadoInicial = fatura.estado && permitidos.includes(fatura.estado) ? fatura.estado : (permitidos[0] || ESTADO_POR_PAGAR)
       setEstado(estadoInicial)
+      setDescricao(fatura.descricao || '')
       setJustificacao(fatura.justificacao || '')
       setErros({})
     }
@@ -31,8 +33,10 @@ function ModalEditarFatura({ fatura, clientes = [], estadosPermitidos = [], conf
 
   if (!fatura) return null
 
+  const estadoAtual = (fatura.estado || '').trim()
+  const jaEmitida = estadoAtual !== 'Rascunho'
   const dataInicial = fatura.data ? fatura.data.slice(0, 10) : ''
-  const isDirty = data !== dataInicial || cliente !== (fatura.cliente || '') || String(valor) !== String(fatura.valor ?? '') || estado !== (fatura.estado || ESTADO_POR_PAGAR) || (estado === 'Anulada' && justificacao !== (fatura.justificacao || ''))
+  const isDirty = data !== dataInicial || cliente !== (fatura.cliente || '') || String(valor) !== String(fatura.valor ?? '') || (descricao || '').trim() !== (fatura.descricao || '').trim() || estado !== (fatura.estado || ESTADO_POR_PAGAR) || (estado === 'Anulada' && justificacao !== (fatura.justificacao || ''))
 
   const handlePedirFechar = () => {
     if (isDirty) setMostrarConfirmarSair(true)
@@ -54,6 +58,7 @@ function ModalEditarFatura({ fatura, clientes = [], estadosPermitidos = [], conf
       data,
       cliente: cliente.trim(),
       valor: Number(valor),
+      descricao: (descricao || '').trim(),
       estado: estado || 'Por pagar',
       justificacao: estado === 'Anulada' ? (justificacao || '').trim() : '',
     })
@@ -79,7 +84,7 @@ function ModalEditarFatura({ fatura, clientes = [], estadosPermitidos = [], conf
         <form className="modal-editar__form" onSubmit={handleSubmit}>
           <div className="form-fatura__campo">
             <label>Número</label>
-            <input type="text" value={fatura.numero} readOnly className="form-fatura__input--readonly" />
+            <input type="text" value={fatura.numero || '—'} readOnly className="form-fatura__input--readonly" aria-label={jaEmitida ? 'Número fixo após emissão' : undefined} />
           </div>
           <div className="form-fatura__campo">
             <label htmlFor="edit-fatura-data">Data</label>
@@ -87,8 +92,11 @@ function ModalEditarFatura({ fatura, clientes = [], estadosPermitidos = [], conf
               id="edit-fatura-data"
               type="date"
               value={data}
-              onChange={(e) => setData(e.target.value)}
+              onChange={(e) => !jaEmitida && setData(e.target.value)}
+              readOnly={jaEmitida}
               required
+              className={jaEmitida ? 'form-fatura__input--readonly' : ''}
+              aria-label={jaEmitida ? 'Data fixa após emissão' : undefined}
             />
           </div>
           {clientes.length > 0 ? (
@@ -134,6 +142,17 @@ function ModalEditarFatura({ fatura, clientes = [], estadosPermitidos = [], conf
               required
             />
             {erros.valor && <span className="form-fatura__erro">{erros.valor}</span>}
+          </div>
+          <div className="form-fatura__campo">
+            <label htmlFor="edit-fatura-descricao">Descrição (opcional)</label>
+            <textarea
+              id="edit-fatura-descricao"
+              className="form-fatura__textarea"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+              placeholder="Ex: Serviços de consultoria..."
+              rows={3}
+            />
           </div>
           <div className="form-fatura__campo">
             <label htmlFor="edit-fatura-estado">Estado</label>

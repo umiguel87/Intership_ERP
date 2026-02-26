@@ -114,7 +114,7 @@ function Sidebar({ secaoAtiva, onMudarSecao, user, onLogout, permissoes = {}, mi
       </nav>
       <span className="sidebar__section-label sidebar__section-label--config">Configuração</span>
       <div className="sidebar__footer">
-        {permissoes.canVerLogs && (
+        {(permissoes.canVerDefinicoes ?? permissoes.canVerLogs) && (
           <button
             type="button"
             className={`sidebar__item sidebar__item--footer ${secaoAtiva === 'definicoes' ? 'sidebar__item--ativo' : ''}`}

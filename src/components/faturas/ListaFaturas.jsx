@@ -85,7 +85,8 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
       list = list.filter(
         (f) =>
           (f.numero || '').toLowerCase().includes(p) ||
-          (f.cliente || '').toLowerCase().includes(p)
+          (f.cliente || '').toLowerCase().includes(p) ||
+          (f.descricao || '').toLowerCase().includes(p)
       )
     }
     if (filtroEstado) {
@@ -138,6 +139,7 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
     { key: 'data', label: 'Data' },
     { key: 'cliente', label: 'Cliente' },
     { key: 'valor', label: 'Valor' },
+    { key: 'descricao', label: 'Descrição' },
     { key: 'estado', label: 'Estado' },
   ]
 
@@ -157,6 +159,7 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
       data: new Date().toISOString().slice(0, 10),
       cliente: f.cliente || '',
       valor: f.valor ?? 0,
+      descricao: f.descricao || '',
       estado: 'Por pagar',
     }
     onAdicionar(novaFatura)
@@ -176,7 +179,7 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
             id="pesquisa-faturas"
             type="search"
             className="lista-faturas__pesquisa"
-            placeholder="Número ou cliente..."
+            placeholder="Número, cliente ou descrição..."
             value={pesquisa}
             onChange={(e) => setPesquisa(e.target.value)}
             aria-label="Pesquisar por número ou nome do cliente"
@@ -291,7 +294,7 @@ function ListaFaturas({ faturas = [], clientes = [], initialPesquisa, onInitialP
                 ].filter(Boolean).join(' ')
                 return (
                   <tr key={f.id} className={rowClass || undefined}>
-                    <td className="lista-faturas__td-num">{f.numero}</td>
+                    <td className="lista-faturas__td-num">{f.numero || '—'}</td>
                     <td className="lista-faturas__td-data">{formatarData(f.data)}</td>
                     <td className="lista-faturas__td-cliente">{f.cliente}</td>
                     <td className="lista-faturas__valor">{formatarMoeda(f.valor)}</td>
